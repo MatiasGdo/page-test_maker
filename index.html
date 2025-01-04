@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio de Exámenes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="mode-switcher">
+        <button id="light-mode" title="Modo Claro">🌞</button>
+        <button id="dark-mode" title="Modo Oscuro">🌜</button>
+    </div>
+    <div class="container">
+        <div id="quiz-container">
+            <div id="header">
+                <h1>Estudio de Exámenes Tipo Test</h1>
+                <div id="question-number"></div>
+            </div>
+            <div id="question-container">
+                <div id="question-box">
+                    <div id="question"></div>
+                </div>
+                <div id="answers-box">
+                    <div id="answers"></div>
+                </div>
+            </div>
+            <button id="next-button">Siguiente</button>
+        </div>
+        <div id="summary-panel">
+            <h2>Resumen</h2>
+            <div id="summary-count"></div>
+            <ul id="summary-list"></ul>
+            <button id="restart-button">🔄 Reiniciar</button>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="modal-close" class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
