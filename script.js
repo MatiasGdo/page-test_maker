@@ -51,9 +51,9 @@ const questions = [
         correct: 4
     },
     {
-        question: "Which of the following system resources can Mont test? (Choose THREE correct answers).",
+        question: "Which of the following system resources can Monit test? (Choose THREE correct answers).",
         answers: ["A. loadavg (30min)", "B. loadavg (5min)", "C. loadavg (45min)", "D. loadavg (15min)", "E. loadavg (8min)"],
-        correct: [1, 3, 4]
+        correct: [0, 2, 3]
     },
     {
         question: "What is defined by the option miimon=100 of the bond kernel module?",
@@ -108,7 +108,7 @@ const questions = [
     {
         question: "In a failover cluster, why does fencing disable the connection of cluster nodes to shared storage?",
         answers: ["A. In order reduce the I/O load of the shared storage device so that enough bandwidth is available for the failover operations following the fencing", "B. In order to grant storage access to the overtaking node as shared storage can be mounted only once at a time.", "C. In order to ensure that failures of the shared storage device does not affect the fenced cluster node.", "D. In order to ensure data integrity which could be compromised in a Split brain situation.", "E. In order to free up space used by the fenced cluster node on the shared storage device."],
-        correct: 3
+        correct: 1
     },
     {
         question: "Which of the following messaging layers are supported by Pacemaker? (Choose correct answers)",
@@ -128,7 +128,7 @@ const questions = [
     {
         question: "Which of the following statements are true regarding the determination of the capacity of a high availability cluster? (Choose TWO correct answers)",
         answers: ["A. The overall capacity of all components in the high availability cluster doesn’t have to be larger than the resources needed in a regular non-clustered setup.", "B. In case of the failure of any component, enough resources must remain available to provide all cluster node", "C. Failover clusters can be used to scale a single service beyond the capacity of a single cluster node", "D. The number of nodes in a clusters has no effect on availability as long as the sum of the available computing resources are equal", "E. In regular cluster operation, not all available resources are used."],
-        correct: [1, 2]
+        correct: [1, 4]
     },
     {
         question: "Which of the following options exist for clone resources in a Pacemaker cluster? (Choose TWO correct answers)",
@@ -143,7 +143,7 @@ const questions = [
     {
         question: "Which one of the following is NOT a valid STONITH device in a Pacemaker cluster?",
         answers: ["A. Ibmhmc", "B. Apcmaster", "C. scsi", "D. ssh", "E. vcenter"],
-        correct: 1
+        correct: 3
     },
     {
         question: "Which of the following statements are true regarding a virtual IP address in the context of keepalived? (Choose TWO correct answers)",
@@ -524,7 +524,8 @@ const questions = [
             "A. ifadm -m enp0s3",
             "B. Ismii enp0s3",
             "C. miidump enp0s3",
-            "D. ethtool enp0s3"
+            "D. ethtool enp0s3",
+            "E. netcat –link enp0s3"
         ],
         correct: 3
     },
@@ -725,6 +726,180 @@ const questions = [
             "E. Journals were heavily used in GFS and are deprecated and optional in GFS2."
         ],
         correct: 2
+    },
+    {
+        question: "Which of the following LVM commands adds the new physical volumen /dev/sdj1 to the existing volumen group vg0?",
+        answers: [
+            "A. pvadmin /dev/sdjl –v vg0",
+            "B. pvadd /dev/sdjl vg0",
+            "C. pvedit –volume-group vg0 /dev/sdjl",
+            "D. vgconvert –pvs +/dev/sdjl",
+            "E. vgextend vg0 /dev/sdjl"
+        ],
+        correct: 4
+    },
+    {
+        question: "How can Access to a GlusterFS volumen be limited?",
+        answers: [
+            "A. By setting the options auth.allow and auth.reject on the volumen.",
+            "B. By enabling RBAC on the volumen and assigning roles to Linux users accessing the volumen.",
+            "C. By setting POSIX ACLs for hosts, as in setfacl –m h:192.168.99.100:rwx /gluster",
+            "D. By configuring Access policies using gluster policy and gluster volumen policy-map",
+            "E. By creating /etc/gluster/allaw and /etc/gluster/deny files on all nodes"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following commands créate a new RADOS block device named example with a capacity of 10 MiB in the rbd pool? ( Choose TWO correct answers)",
+        answers: [
+            "A. rbd create –size 10M rbd/example",
+            "B. rbd new example –size 10M rbd",
+            "C. rbd create –pool rbd –size 10M example",
+            "D. rbd mkdevice –size 10M rbd/example",
+            "E. rbd image create rbd/example 10M"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following statements are true regarding the handing of a hardware error in a high availability cluster?(Choose THREE correct answers)",
+        answers: [
+            "A. Erroneous components are physicaly turned off as they are in an undefined state.",
+            "B. The cluster management components monitor the heath of all cluster components.",
+            "C. After the cluster deals with an error, no manual actions are required to bring the cluster back to normal operation.",
+            "D. High availability clusters provide automatic recovery from software errors only and cannot mitigate hardware issues.",
+            "E. Services are restarted on or redirected to other cluster nodes."
+        ],
+        correct: [1, 2, 4]
+    },
+    {
+        question: "Which of the following commands extends the GlusterFS volumen gv0 by the currently unused bricck cl1n4:/data/brick1/gv0?",
+        answers: [
+            "A. gluster volumen resize gv0 –add-brick=cl1n4:/data/brick1/gv0",
+            "B. gluster volumen grow gv0 +cl1n4:/data/brick1/gv0",
+            "C. gluster volumen add-brick gv0 cl14:/data/brick1/gv0",
+            "D. gluster volumen rebalance –include cl1n4:/data/brick1/gv0",
+            "E. gluster volumen extend gv0 –brick cl1n4:/data/brick1/gv0"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following statements is true about CRUSH maps in Ceph) (Choose TWO correct answers)",
+        answers: [
+            "A. CRUSH maps compress the data before it is stored in OSDs",
+            "B. CRUSH maps model the physical layout of the cluster",
+            "C. CRUSH maps list OSDs by location and contain rules for how to replicate data.",
+            "D. CRUSH maps are used to authenticate Ceph clients",
+            "E. Each ceph cluster may define multiple CRUSH maps"
+        ],
+        correct: [1, 2]
+    },
+    {
+        question: "When reconnecting after a Split-brain situation, GlusterFS detects that some files store on the gv0 file system were changed on both sides during the cluster split. Which command lists the affected file?",
+        answers: [
+            "A. gluster volumen status gv0 –f file.status=inconsistent",
+            "B. gluster volumen diff gv0",
+            "C. gluster volumen merge gv0 –check",
+            "D. gluster volumen clean gv0 –v –dry-run",
+            "E. gluster volumen heal gv0 info"
+        ],
+        correct: 4
+    },
+    {
+        question: "Which Ceph component is resposible for maintaining information regarding the cluster state and authentication?",
+        answers: [
+            "A. Ceph Supervisor",
+            "B. Ceph Master",
+            "C. Ceph Manager",
+            "D. Ceph Monitor",
+            "E. Ceph Leader"
+        ],
+        correct: 3
+    },
+    {
+        question: "When using cephadm to create a Ceph cluster, which of the following commands creates an OSD on /dev/sdb on host nodel.example.com?",
+        answers: [
+            "A. ceph osd add /dev/sdb:nodel.example.com",
+            "B. ceph orch daemon add osd nodel.example.com:/dev/sdb",
+            "C. ceph init osd nodel.example.com /dev/sdb",
+            "D. ceph extend osd  --osd=/dev/sbd –node nodel.example.com",
+            "E. ceph install nodel.example.com –osd /dev/sdb"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which of the following commands creates a snapshot named example for the CephFS mounted at /mnt?",
+        answers: [
+            "A. ceph fs snap cephfs example",
+            "B. cephfs=snap ==name example",
+            "C. touch /mnt/.snap/example",
+            "D. ceph snap example /mnt",
+            "E. mkdir /mnt/.snap/example"
+        ],
+        correct: 4
+    },
+    {
+        question: "Which of the following commands removes the node cl1n4 from the GlusterFS Trusted Storage Pool (TSP)?",
+        answers: [
+            "A. gluster node delete cl1n4",
+            "B. gluster tsp remove cl1n4",
+            "C. gluster peer detach cl1n4",
+            "D. gluster demote cl1n4",
+            "E. gluster brick shutdown cl1n4:*"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following statemenst are true about the Ceph BlueStore storage backend? (Choose TWO correct answers.)",
+        answers: [
+            "A. Data and journal must be stored in a POSIX compatible file system.",
+            "B. Data, journal and metadata must be store on individual block devices.",
+            "C. Data, journal and metadata can be on up to three individual block devices.",
+            "D. Data, journal and metadata can be store on the same block device.",
+            "E. Data and journal can be stored either on a POSIX-compatible file system or a raw block device."
+        ],
+        correct: [2, 3]
+    },
+    {
+        question: "The command ceph health detail creates this output:\nHEALTH_ERR 1 pgs inconsistent; 1 scrub errors\nPg 1.13b7 is active+clean+inconsistent, acting [3,1,2]\n1 scrub errors\nWhich of the following commands can be used resolve the error?",
+        answers: [
+            "A. ceph pg scrub 1.13b7",
+            "B. ceph clone –pg 1.13b7",
+            "C. ceph pg delete 1.13b7",
+            "D. ceph repair pgs",
+            "E. ceph pg repair 1.13b7"
+        ],
+        correct: 4
+    },
+    {
+        question: "Which of the following statements are true regarding a quorum disk?",
+        answers: [
+            "A. It is a local device on each node in a cluster and cannot be puto n shared storage.",
+            "B. It is used to determine which nodes are part of a cluster in the event of an outage of a cluster member",
+            "C. It is the central data store on which cluster tuntime data such as user sessions for load balancing is kept.",
+            "D. It is exclusively maintained by one node, typically called quorum master, and is not accesible by other cluster members.",
+            "E. It is used to store log files of operations and changes in the clusters and is not required in normal cluster operations."
+        ],
+        correct: 1
+    },
+    {
+        question: "What command manages disk-based Split brain detection (STONITH Block Devide / Storage-Based Death) for Pacemaker? (Specify ONLY the command without any path or parameters.)",
+        type: "written",
+        correct: "stonith_admin"
+    },
+    {
+        question: "What LVM command moves all data stored  on a specific physical volumen to another physical volumen within the samen volumen group? (Specify ONLY the command without any path or parameters.)",
+        type: "written",
+        correct: "pvmove"
+    },
+    {
+        question: "Which command is used to créate, view and modify Ceph Keyring Files? (Specify ONLY the command without any path or parameters.)",
+        type: "written",
+        correct: "ceph-authtool"
+    },
+    {
+        question: "What command is used to edit and display the running Linux Virtual Server (LVS) configuration? (Specify ONLY the command without any path or parameters)",
+        type: "written",
+        correct: "ipvsadm"
     }
 ];
 
