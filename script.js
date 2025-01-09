@@ -1,3 +1,4 @@
+// Array de preguntas para el cuestionario
 const questions = [
     {
         question: "Which of the following modes for bonding network interfaces uses only one of its member interfaces at a time?",
@@ -298,14 +299,441 @@ const questions = [
         question: "Which of the following commands indicates whether the DRBD resource r0 is in the primary or secondary state on the local and the remote DRBD node?",
         answers: ["A. drbdadm cstate r0", "B. drbdadm verify r0", "C. drbdadm role r0", "D. drbdadm list r0", "E. drbdadm replica r0"],
         correct: 2
+    },
+    {
+        question: "What is the task of the Cluster Logical Volume manager, CLVM?",
+        answers: [
+            "A. Keep the logical volume configuration on a shared storage consistent throughout the cluster nodes.",
+            "B. Ensure non-cluster file systems are only mounted once at a time",
+            "C. Forward incoming TCP connections to a logical service to one of multiple backend nodes.",
+            "D. Allow multiple cluster nodes into several logical groups that are always fenced together"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which Pacemaker resource agent manages the OCFS2 cluster stack?",
+        answers: [
+            "A. ocf:pacemaker:ocfs2",
+            "B. ocf:fs:ocfs2d",
+            "C. ocf:heartbeat:cfsd",
+            "D. ocf:Oracle:pcmk",
+            "E. ocf:ocfs2:02ocb"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which directory provides links to access storage devices by its WWWID?",
+        answers: [
+            "A. /dev/mpio/",
+            "B. /sys/fs/wwid/",
+            "C. /dev/disk/by-id/",
+            "D. /proc/sys/block/wwid",
+            "E. /dev/wwid/"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following properties of a DRBD resource are determined by the synchronization protocol? (Choose TWO correct answers)",
+        answers: [
+            "A. Size of the volume",
+            "B. Resilience against data loss",
+            "C. I/O latency when writing data",
+            "D. Throughput during device synchronization"
+        ],
+        correct: [1, 2]
+    },
+    {
+        question: "To improve the availability of a web application, multiple web servers have been set up. Each web server contains a local copy of the web application and all other content needed to serve to the clients. Furthermore, each server runs a local database server, which replicates the contents of the database with the other nodes. An additional node receives all requests to the web application and passes them randomly to one of the available backend servers. Which of the following should be done to further improve the availability of this setup?",
+        answers: [
+            "A. Since load balancers cannot handle HTTP, the web servers should be configured in a failover setup without a load balancer.",
+            "B. One additional node should be added as a dedicated database server which replaces the local database servers on the web servers.",
+            "C. A second load balancer should be added and configured to form a failover cluster with the existing load balancer.",
+            "D. The load balancer should be configured to forward as many requests as possible to one server instead of distributing them randomly.",
+            "E. A quorum disk should be installed on a shared storage which is connected to all cluster nodes."
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following constraints are supported by Pacemaker? (Choose TWO correct answers)",
+        answers: [
+            "A. diskspace",
+            "B. order",
+            "C. colocation",
+            "D. collaboration",
+            "E. coexistence"
+        ],
+        correct: [1, 2]
+    },
+    {
+        question: "Which of the following keepalived configuration directives specifies round robin as the load balancing algorithm?",
+        answers: [
+            "A. lb_algorithm=rr",
+            "B. lb_algo rr",
+            "C. loadbalancer_mode=rr",
+            "D. algorithm=round robin",
+            "E. lb_mode rr"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which of the following sections may exist in the Corosync configuration file? (Choose THREE correct answers)",
+        answers: [
+            "A. totem",
+            "B. heartbeat",
+            "C. pacemaker",
+            "D. quorum",
+            "E. nodelist"
+        ],
+        correct: [0, 3, 4]
+    },
+    {
+        question: "Which of the following options represents a valid declaration of a backend server with HAProxy?",
+        answers: [
+            "A. server server_x 10.1.0.1:80 check",
+            "B. host server_x 10.1.0.1:80 cookie server_x",
+            "C. target server_x 10.1.0.1:80 via_proxy",
+            "D. pool server_x 10.1.0.1:80",
+            "E. backend server_x 10.1.0.1:80"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following device classes are commonly used STONITH devices? (Choose THREE correct answers)",
+        answers: [
+            "A. Blade control devices",
+            "B. Local node storage",
+            "C. Remote management services like IPMI devices",
+            "D. CPU frequency management tools",
+            "E. Power Distribution Units, PDUs"
+        ],
+        correct: [0, 2, 4]
+    },
+    {
+        question: "Which pcs subcommand manages which cluster resources may run together on the same nodes?",
+        answers: [
+            "A. condition",
+            "B. compliance",
+            "C. constraint",
+            "D. collaboration",
+            "E. coexistence"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following HAProxy configuration statements denies access for requests matching the ACL external_clients?",
+        answers: [
+            "A. acl external_clients drop",
+            "B. http_request deny if external_clients",
+            "C. set response-code 200 acl external_clients",
+            "D. request-route external_clients null",
+            "E. use_backend none when external_clients"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which of the following are valid load balancing algorithms for HAProxy? (Choose TWO correct answers)",
+        answers: [
+            "A. destination",
+            "B. persistent",
+            "C. weightedrr",
+            "D. source",
+            "E. leastconn"
+        ],
+        correct: [3, 4]
+    },
+    {
+        question: "Which of the following are Pacemaker components? (Choose TWO correct answers)",
+        answers: [
+            "A. pacemaker-isolationd (formerly fencer)",
+            "B. pacemaker-controld (formerly crmd)",
+            "C. pacemaker-clusterd (formerly ccmd)",
+            "D. pacemaker-directord (formerly keepalived)",
+            "E. pacemaker-execd (formerly lrmd)"
+        ],
+        correct: [1, 4]
+    },
+    {
+        question: "Which of the following statements describes the act of fencing in a high availability cluster?",
+        answers: [
+            "A. Fencing is the accounting and limitation of disk usage on shared storage.",
+            "B. Fencing is the forwarding of incoming network connections to backend servers.",
+            "C. Fencing is the assignment of services to different cluster nodes to avoid interference of the services.",
+            "D. Fencing is the disconnection of a failed cluster node from any other cluster resources.",
+            "E. Fencing is the automated stop and restart of cluster services that suffer from software errors."
+        ],
+        correct: 3
+    },
+    {
+        question: "Without using additional tools, what information can Linux Virtual Server use to describe which packets it should forward to another node? (Choose TWO correct answers)",
+        answers: [
+            "A. The target IP address and TCP or UDP port of the packet.",
+            "B. The layer 7 protocol (e.g. HTTP or SMTP) used in the packet",
+            "C. The interface on which the packet arrived at the load balancer",
+            "D. The target URL in case of an HTTP packet.",
+            "E. Marks added to the packet by netfilter."
+        ],
+        correct: [0, 2]
+    },
+    {
+        question: "In keepalived, what is configured by the configuration option sorry_server?",
+        answers: [
+            "A. The default virtual host that is assigned to incoming HTTP requests missing a Host header before forwarding them to a backend.",
+            "B. The addresses of backend servers that should not be assigned any new connections.",
+            "C. The addresses of backend servers that were overloaded in the past and should be scheduled with a reduced priority",
+            "D. The address of a server to which requests are redirected in case no real server is available.",
+            "E. The hostnames of the servers that despite the remaining configuration should always be scheduled by the Serial Operation Round Robin algorithm."
+        ],
+        correct: 3
+    },
+    {
+        question: "How does high availability clustering relate to periodic storage backup? (Choose TWO correct answers)",
+        answers: [
+            "A. Regular backups remain vital as they allow restoration of data that was accidentally deleted or corrupted.",
+            "B. Regular backups become generally unnecessary as any data loss or corruption is automatically recovered by the high availability cluster.",
+            "C. Backups should be located only on the local storage of the cluster nodes and should not be backed up in order to prevent bandwidth congestion.",
+            "D. Regular backups may be limited to the cluster configuration and cluster state data as this information is sufficient to recover any state of the cluster including data at any time.",
+            "E. Backup procedures may have to be adapted to the cluster to ensure complete and recoverable backups."
+        ],
+        correct: [0, 4]
+    },
+    {
+        question: "Which of the following modes for bonding network interfaces sends all packets to the same target link layer address through the same member interface of the bond?",
+        answers: [
+            "A. balance-sticky",
+            "B. balance-mac",
+            "C. balance-rr",
+            "D. balance-ct",
+            "E. balance-xor"
+        ],
+        correct: 4
+    },
+    {
+        question: "Which of the following attribute types are contained in the output of smartctl for a SATA SSD? (Choose TWO correct answers)",
+        answers: [
+            "A. Sensor",
+            "B. Pre-fail",
+            "C. CountDown",
+            "D. Flag",
+            "E. Old_age"
+        ],
+        correct: [1, 4]
+    },
+    {
+        question: "Which of the following commands displays the MII status of enp0s3?",
+        answers: [
+            "A. ifadm -m enp0s3",
+            "B. Ismii enp0s3",
+            "C. miidump enp0s3",
+            "D. ethtool enp0s3"
+        ],
+        correct: 3
+    },
+    {
+        question: "How many copies of each data block exist on a RAID 10 device?",
+        answers: [
+            "A. 2",
+            "B. 8",
+            "C. 1",
+            "D. 16",
+            "E. 4"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following mdadm options are available when creating a new RAID device? (Choose THREE correct answers)",
+        answers: [
+            "A. --filesystem",
+            "B. --lvm",
+            "C. --raid-devices",
+            "D. --level",
+            "E. --spare-devices"
+        ],
+        correct: [2, 3, 4]
+    },
+    {
+        question: "What is the purpose of the command crm resource unmanage?",
+        answers: [
+            "A. Kill the current instance of a resource and restart the resource on another node.",
+            "B. Stop a resource managed by Pacemaker and restart it using systemd.",
+            "C. Delete a resource from the Pacemaker configuration.",
+            "D. Unlock the resource configuration to change resource properties.",
+            "E. Prevent Pacemaker from interacting with the resource, even if it becomes unavailable."
+        ],
+        correct: 4
+    },
+    {
+        question: "Which of the following LVM commands adds the new physical volume /dev/sdj1 to the existing volume group vg0?",
+        answers: [
+            "A. pvadmin /dev/sdj1 -v vg0",
+            "B. pvadd /dev/sdj1 vg0",
+            "C. pvedit --volume-group vg0 /dev/sdj1",
+            "D. vgconvert --pvs +/dev/sdj1",
+            "E. vgextend vg0 /dev/sdj1"
+        ],
+        correct: 4
+    },
+    {
+        question: "Which of the following options stem from the ifcfg file of a bonding master interface?",
+        answers: [
+            "A. BONDING_MASTER=yes",
+            "B. BOOTPROTO=bond",
+            "C. IP_CMD=bondcfg",
+            "D. SLAVE_INTERFACES=\"eth0 eth1\"",
+            "E. TYPE=Ethernet"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following LVM commands creates new snapshots?",
+        answers: [
+            "A. lvcreate",
+            "B. lvsnap",
+            "C. lvcopy",
+            "D. lvfreeze",
+            "E. lvadm"
+        ],
+        correct: 0
+    },
+    {
+        question: "When using DRBD in a Pacemaker cluster, which Pacemaker configuration objects must be created in order to use the DRBD device as file storage for other cluster services?",
+        answers: [
+            "A. A file system resource to mount the device.",
+            "B. A replication resource that synchronizes the DRBD device's data to all nodes that may take over the device after a failover.",
+            "C. A security resource in order to permit other cluster services to access the data on the DRBD device.",
+            "D. A health resource in order to check the integrity of the file system.",
+            "E. A constraint to ensure the device is mounted before the dependent services are started."
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following commands makes the tagged VLAN 312 on enp0s3 accessible?",
+        answers: [
+            "A. ip tag add 312 name enp0s3.312 dev enp0s3",
+            "B. ip proto type 802.1Q name enp0s3.312 dev enp0s3",
+            "C. ip link add link enp0s3 name enp0s3.312 type vlan id 312",
+            "D. ip dev set enp0s3.312 protocol vlan name enp0s3.312",
+            "E. ip vlan add 312 name enp0s3.312 dev enp0s3"
+        ],
+        correct: 2
+    },
+    {
+        question: "Which of the following commands manages traffic shaping on Linux?",
+        answers: [
+            "A. qdisc",
+            "B. netlimit",
+            "C. tc",
+            "D. ip",
+            "E. flowtables"
+        ],
+        correct: 2
+    },
+    {
+        question: "How can the state of the backing storage disks of a DRBD device be checked?",
+        answers: [
+            "A. lsdrbd all",
+            "B. drbdadm dstate all",
+            "C. smartctl -drbd",
+            "D. cat /proc/drbd/status",
+            "E. drbdctl health"
+        ],
+        correct: 1
+    },
+    {
+        question: "Which command is used to manage and process /etc/multipath.conf?",
+        answers: [
+            "A. mpathconf",
+            "B. mpmadmin",
+            "C. mpedit",
+            "D. multipathmgr",
+            "E. mdmctl"
+        ],
+        correct: 0
+    },
+    {
+        question: "After changing the DRBD configuration files, which command makes the new configuration effective?",
+        answers: [
+            "A. drbdmgr refresh",
+            "B. drbdctl reload",
+            "C. drbdconf update",
+            "D. drbdadm adjust",
+            "E. drbddev recreate"
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following commands can be used to change properties such as the number of node slots or the label of an existing OCFS2 filesystem?",
+        answers: [
+            "A. crm_edit",
+            "B. o2cbtool",
+            "C. ocfs2tool",
+            "D. ocfs2.setprops",
+            "E. tunefs.ocfs2"
+        ],
+        correct: 4
+    },
+    {
+        question: "Which of the following commands creates the GFS2 volume webcontent in the three-node Pacemaker cluster cl1 on the shared disk /dev/sdd1?",
+        answers: [
+            "A. gfs2_mkfs -t cl1:webcontent -p lock_dlm -j 3 /dev/sdd1",
+            "B. gfs2_mkfs -c cl1 -d /dev/sdd1 -p pcmk -j 3 webcontent",
+            "C. gfs2_mkfs -t webcontent -p pcmk:cl1 -j 3 /dev/sdd1",
+            "D. gfs2_mkfs -c cl1 -n webcontent -dlm -j 3 -- /dev/sdd1",
+            "E. gfs2_mktfs -d /dev/sdd1 -p dlm_inline -j 3 webcontent (cl1"
+        ],
+        correct: 0
+    },
+    {
+        question: "Which of the following are tools or services that manage a Linux Virtual Server (LVS) setup? (Choose TWO correct answers)",
+        answers: [
+            "A. keepalived",
+            "B. roundrobind",
+            "C. vserverd",
+            "D. ldirectord",
+            "E. lvproxy"
+        ],
+        correct: [0, 3]
+    },
+    {
+        question: "When setting up a new DRBD resource, what is the state of the underlying disks before the initial synchronization?",
+        answers: [
+            "A. Inconsistent",
+            "B. Synchronizable",
+            "C. Single",
+            "D. Empty",
+            "E. Raw"
+        ],
+        correct: 0
+    },
+    {
+        question: "What is a requirement to use DRBD in dual primary mode?",
+        answers: [
+            "A. A third standby-node must be available.",
+            "B. No more than one DRBD resource may run in dual primary mode.",
+            "C. DRBD must be run on top of a corosync cluster",
+            "D. Synchronization protocol C must be used",
+            "E. LVM must be run on top of the DRBD resource."
+        ],
+        correct: 3
+    },
+    {
+        question: "Which of the following statements is true regarding journals of a GFS2 filesystem?",
+        answers: [
+            "A. The GFS cluster Journal Daemon, GCJD, handles the journaling in a GFS2 cluster.",
+            "B. Each GFS2 filesystem has exactly one journal.",
+            "C. Every node that simultaneously mounts the filesystem requires its own GFS2 journal.",
+            "D. Once a GFS2 filesystem is created, the number of journals cannot be changed.",
+            "E. Journals were heavily used in GFS and are deprecated and optional in GFS2."
+        ],
+        correct: 2
     }
 ];
 
-let currentQuestionIndex = 0;
-let shuffledQuestions = [];
-let summary = [];
-let selectedAnswers = [];
+let currentQuestionIndex = 0; // Índice de la pregunta actual
+let shuffledQuestions = []; // Array para almacenar preguntas mezcladas
+let summary = []; // Array para almacenar el resumen de respuestas
+let selectedAnswers = []; // Array para almacenar las respuestas seleccionadas
 
+// Función para mezclar un array (algoritmo de Fisher-Yates)
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -313,214 +741,224 @@ function shuffle(array) {
     }
 }
 
+// Función para inicializar el cuestionario
 function initializeQuiz() {
-    shuffledQuestions = [...questions];
-    shuffle(shuffledQuestions);
-    summary = shuffledQuestions.map(() => ({ answered: false, correct: false, partiallyCorrect: false }));
-    currentQuestionIndex = 0;
-    selectedAnswers = [];
-    updateSummaryPanel();
-    showQuestion();
+    shuffledQuestions = [...questions]; // Copiar preguntas a shuffledQuestions
+    shuffle(shuffledQuestions); // Mezclar las preguntas
+    summary = shuffledQuestions.map(() => ({ answered: false, correct: false, partiallyCorrect: false })); // Inicializar resumen
+    currentQuestionIndex = 0; // Reiniciar el índice de la pregunta actual
+    selectedAnswers = []; // Reiniciar respuestas seleccionadas
+    updateSummaryPanel(); // Actualizar el panel de resumen
+    showQuestion(); // Mostrar la primera pregunta
 }
 
+// Función para mostrar la pregunta actual
 function showQuestion() {
-    const questionNumberElement = document.getElementById('question-number');
-    const questionElement = document.getElementById('question');
-    const answersElement = document.getElementById('answers');
-    const question = shuffledQuestions[currentQuestionIndex];
+    const questionNumberElement = document.getElementById('question-number'); // Obtener el elemento del número de pregunta
+    const questionElement = document.getElementById('question'); // Obtener el elemento de la pregunta
+    const answersElement = document.getElementById('answers'); // Obtener el elemento de respuestas
+    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
 
-    questionNumberElement.textContent = `Pregunta ${currentQuestionIndex + 1}`;
-    questionElement.textContent = question.question;
-    answersElement.innerHTML = '';
-    selectedAnswers = [];
+    questionNumberElement.textContent = `Pregunta ${currentQuestionIndex + 1}`; // Mostrar el número de pregunta
+    questionElement.textContent = question.question; // Mostrar el texto de la pregunta
+    answersElement.innerHTML = ''; // Limpiar respuestas anteriores
+    selectedAnswers = []; // Reiniciar respuestas seleccionadas
 
     if (question.type === "written") {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = 'written-answer';
-        input.placeholder = 'Escribe tu respuesta aquí';
-        answersElement.appendChild(input);
+        const input = document.createElement('input'); // Crear un elemento de entrada para respuestas escritas
+        input.type = 'text'; // Establecer el tipo de entrada a texto
+        input.id = 'written-answer'; // Establecer el id de la entrada
+        input.placeholder = 'Escribe tu respuesta aquí'; // Establecer el texto del marcador de posición
+        answersElement.appendChild(input); // Agregar la entrada al elemento de respuestas
     } else {
         question.answers.forEach((answer, index) => {
-            const button = document.createElement('button');
-            button.textContent = answer;
-            button.onclick = () => toggleAnswer(index);
-            answersElement.appendChild(button);
+            const button = document.createElement('button'); // Crear un botón para cada respuesta
+            button.textContent = answer; // Establecer el texto del botón
+            button.onclick = () => toggleAnswer(index); // Establecer el controlador de clic del botón
+            answersElement.appendChild(button); // Agregar el botón al elemento de respuestas
         });
     }
 
-    const submitButton = document.createElement('button');
-    submitButton.textContent = 'Enviar';
+    const submitButton = document.createElement('button'); // Crear un botón de envío
+    submitButton.textContent = 'Enviar'; // Establecer el texto del botón
     submitButton.onclick = () => {
         if (question.type === "written") {
-            checkWrittenAnswer();
+            checkWrittenAnswer(); // Verificar respuesta escrita
         } else if (Array.isArray(question.correct)) {
-            checkMultipleChoiceAnswer();
+            checkMultipleChoiceAnswer(); // Verificar respuesta de opción múltiple
         } else {
-            checkSingleChoiceAnswer();
+            checkSingleChoiceAnswer(); // Verificar respuesta de opción única
         }
     };
-    answersElement.appendChild(submitButton);
+    answersElement.appendChild(submitButton); // Agregar el botón de envío al elemento de respuestas
 }
 
+// Función para alternar la selección de una respuesta
 function toggleAnswer(index) {
-    const question = shuffledQuestions[currentQuestionIndex];
+    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
     if (Array.isArray(question.correct)) {
         if (selectedAnswers.includes(index)) {
-            selectedAnswers = selectedAnswers.filter(i => i !== index);
+            selectedAnswers = selectedAnswers.filter(i => i !== index); // Deseleccionar respuesta
         } else {
-            selectedAnswers.push(index);
+            selectedAnswers.push(index); // Seleccionar respuesta
         }
     } else {
-        selectedAnswers = [index];
+        selectedAnswers = [index]; // Seleccionar respuesta única
     }
-    const buttons = document.querySelectorAll('#answers button');
+    const buttons = document.querySelectorAll('#answers button'); // Obtener todos los botones de respuesta
     buttons.forEach((button, i) => {
         if (selectedAnswers.includes(i)) {
-            button.classList.add('selected');
+            button.classList.add('selected'); // Resaltar botón seleccionado
         } else {
-            button.classList.remove('selected');
+            button.classList.remove('selected'); // Quitar resalto de botón no seleccionado
         }
     });
 }
 
+// Función para verificar una respuesta de opción única
 function checkSingleChoiceAnswer() {
-    const question = shuffledQuestions[currentQuestionIndex];
-    const selectedIndex = selectedAnswers[0];
-    const correctAnswer = question.answers[question.correct];
+    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
+    const selectedIndex = selectedAnswers[0]; // Obtener el índice de la respuesta seleccionada
+    const correctAnswer = question.answers[question.correct]; // Obtener el texto de la respuesta correcta
     if (selectedIndex === question.correct) {
-        showModal('¡Correcto!');
-        summary[currentQuestionIndex].correct = true;
+        showModal('¡Correcto!'); // Mostrar mensaje de correcto
+        summary[currentQuestionIndex].correct = true; // Marcar la pregunta como correcta en el resumen
     } else {
-        showModal('Incorrecto. La respuesta correcta es: ' + correctAnswer);
+        showModal('Incorrecto. La respuesta correcta es: ' + correctAnswer); // Mostrar mensaje de incorrecto con la respuesta correcta
     }
-    summary[currentQuestionIndex].answered = true;
-    currentQuestionIndex++;
+    summary[currentQuestionIndex].answered = true; // Marcar la pregunta como respondida en el resumen
+    currentQuestionIndex++; // Pasar a la siguiente pregunta
     if (currentQuestionIndex < shuffledQuestions.length) {
-        showQuestion();
+        showQuestion(); // Mostrar la siguiente pregunta
     } else {
-        showModal('¡Has completado el examen!');
-        currentQuestionIndex = 0;
-        showQuestion();
+        showModal('¡Has completado el examen!'); // Mostrar mensaje de finalización
+        currentQuestionIndex = 0; // Reiniciar el índice de la pregunta
+        showQuestion(); // Mostrar la primera pregunta nuevamente
     }
-    updateSummaryPanel();
+    updateSummaryPanel(); // Actualizar el panel de resumen
 }
 
+// Función para verificar una respuesta de opción múltiple
 function checkMultipleChoiceAnswer() {
-    const question = shuffledQuestions[currentQuestionIndex];
-    const correctAnswers = question.correct;
-    const correctAnswerText = correctAnswers.map(index => String.fromCharCode(65 + index)).join(', ');
-    const allCorrect = correctAnswers.every(index => selectedAnswers.includes(index)) && selectedAnswers.length === correctAnswers.length;
-    const partiallyCorrect = selectedAnswers.some(index => correctAnswers.includes(index)) && !allCorrect;
+    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
+    const correctAnswers = question.correct; // Obtener las respuestas correctas
+    const correctAnswerText = correctAnswers.map(index => String.fromCharCode(65 + index)).join(', '); // Obtener el texto de las respuestas correctas
+    const allCorrect = correctAnswers.every(index => selectedAnswers.includes(index)) && selectedAnswers.length === correctAnswers.length; // Verificar si todas las respuestas seleccionadas son correctas
+    const partiallyCorrect = selectedAnswers.some(index => correctAnswers.includes(index)) && !allCorrect; // Verificar si algunas respuestas seleccionadas son correctas
 
     if (allCorrect) {
-        showModal('¡Correcto!');
-        summary[currentQuestionIndex].correct = true;
+        showModal('¡Correcto!'); // Mostrar mensaje de correcto
+        summary[currentQuestionIndex].correct = true; // Marcar la pregunta como correcta en el resumen
     } else if (partiallyCorrect) {
-        showModal('Parcialmente correcto. Las respuestas correctas son: ' + correctAnswerText);
-        summary[currentQuestionIndex].partiallyCorrect = true;
+        showModal('Parcialmente correcto. Las respuestas correctas son: ' + correctAnswerText); // Mostrar mensaje de parcialmente correcto con las respuestas correctas
+        summary[currentQuestionIndex].partiallyCorrect = true; // Marcar la pregunta como parcialmente correcta en el resumen
     } else {
-        showModal('Incorrecto. Las respuestas correctas son: ' + correctAnswerText);
+        showModal('Incorrecto. Las respuestas correctas son: ' + correctAnswerText); // Mostrar mensaje de incorrecto con las respuestas correctas
     }
-    summary[currentQuestionIndex].answered = true;
-    currentQuestionIndex++;
+    summary[currentQuestionIndex].answered = true; // Marcar la pregunta como respondida en el resumen
+    currentQuestionIndex++; // Pasar a la siguiente pregunta
     if (currentQuestionIndex < shuffledQuestions.length) {
-        showQuestion();
+        showQuestion(); // Mostrar la siguiente pregunta
     } else {
-        showModal('¡Has completado el examen!');
-        currentQuestionIndex = 0;
-        showQuestion();
+        showModal('¡Has completado el examen!'); // Mostrar mensaje de finalización
+        currentQuestionIndex = 0; // Reiniciar el índice de la pregunta
+        showQuestion(); // Mostrar la primera pregunta nuevamente
     }
-    updateSummaryPanel();
+    updateSummaryPanel(); // Actualizar el panel de resumen
 }
 
+// Función para verificar una respuesta escrita
 function checkWrittenAnswer() {
-    const input = document.getElementById('written-answer');
-    const question = shuffledQuestions[currentQuestionIndex];
+    const input = document.getElementById('written-answer'); // Obtener el elemento de entrada
+    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
     if (input.value.trim().toLowerCase() === question.correct.toLowerCase()) {
-        showModal('¡Correcto!');
-        summary[currentQuestionIndex].correct = true;
+        showModal('¡Correcto!'); // Mostrar mensaje de correcto
+        summary[currentQuestionIndex].correct = true; // Marcar la pregunta como correcta en el resumen
     } else {
-        showModal('Incorrecto. La respuesta correcta es: ' + question.correct);
+        showModal('Incorrecto. La respuesta correcta es: ' + question.correct); // Mostrar mensaje de incorrecto con la respuesta correcta
     }
-    summary[currentQuestionIndex].answered = true;
-    currentQuestionIndex++;
+    summary[currentQuestionIndex].answered = true; // Marcar la pregunta como respondida en el resumen
+    currentQuestionIndex++; // Pasar a la siguiente pregunta
     if (currentQuestionIndex < shuffledQuestions.length) {
-        showQuestion();
+        showQuestion(); // Mostrar la siguiente pregunta
     } else {
-        showModal('¡Has completado el examen!');
-        currentQuestionIndex = 0;
-        showQuestion();
+        showModal('¡Has completado el examen!'); // Mostrar mensaje de finalización
+        currentQuestionIndex = 0; // Reiniciar el índice de la pregunta
+        showQuestion(); // Mostrar la primera pregunta nuevamente
     }
-    updateSummaryPanel();
+    updateSummaryPanel(); // Actualizar el panel de resumen
 }
 
+// Función para actualizar el panel de resumen
 function updateSummaryPanel() {
-    const summaryList = document.getElementById('summary-list');
-    const summaryCount = document.getElementById('summary-count');
-    const answeredCount = summary.filter(item => item.answered).length;
-    summaryCount.textContent = `Resueltas: ${answeredCount} / ${shuffledQuestions.length}`;
-    summaryList.innerHTML = '';
+    const summaryList = document.getElementById('summary-list'); // Obtener el elemento de la lista de resumen
+    const summaryCount = document.getElementById('summary-count'); // Obtener el elemento del conteo de resumen
+    const answeredCount = summary.filter(item => item.answered).length; // Obtener el conteo de preguntas respondidas
+    summaryCount.textContent = `Resueltas: ${answeredCount} / ${shuffledQuestions.length}`; // Mostrar el conteo de preguntas respondidas
+    summaryList.innerHTML = ''; // Limpiar la lista de resumen
     summary.forEach((item, index) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `Pregunta ${index + 1}`;
-        const status = document.createElement('span');
+        const listItem = document.createElement('li'); // Crear un elemento de lista para cada pregunta
+        listItem.textContent = `Pregunta ${index + 1}`; // Establecer el texto del elemento de lista
+        const status = document.createElement('span'); // Crear un span para el estado
         if (item.answered) {
             if (item.correct) {
-                status.textContent = '✅';
+                status.textContent = '✅'; // Establecer el estado a correcto
             } else if (item.partiallyCorrect) {
-                status.textContent = '⚠️';
+                status.textContent = '⚠️'; // Establecer el estado a parcialmente correcto
             } else {
-                status.textContent = '❌';
+                status.textContent = '❌'; // Establecer el estado a incorrecto
             }
         } else {
-            status.textContent = '❓';
+            status.textContent = '❓'; // Establecer el estado a no respondido
         }
-        listItem.appendChild(status);
-        listItem.onclick = () => jumpToQuestion(index);
-        summaryList.appendChild(listItem);
+        listItem.appendChild(status); // Agregar el estado al elemento de lista
+        listItem.onclick = () => jumpToQuestion(index); // Establecer el controlador de clic para saltar a la pregunta
+        summaryList.appendChild(listItem); // Agregar el elemento de lista a la lista de resumen
     });
 }
 
+// Función para saltar a una pregunta específica
 function jumpToQuestion(index) {
-    currentQuestionIndex = index;
-    showQuestion();
+    currentQuestionIndex = index; // Establecer el índice de la pregunta actual
+    showQuestion(); // Mostrar la pregunta
 }
 
+// Función para mostrar un modal con un mensaje
 function showModal(message) {
-    const modal = document.getElementById('modal');
-    const modalMessage = document.getElementById('modal-message');
-    modalMessage.textContent = message;
-    modal.style.display = 'block';
+    const modal = document.getElementById('modal'); // Obtener el elemento del modal
+    const modalMessage = document.getElementById('modal-message'); // Obtener el elemento del mensaje del modal
+    modalMessage.textContent = message; // Establecer el texto del mensaje del modal
+    modal.style.display = 'block'; // Mostrar el modal
 }
 
+// Función para cerrar el modal
 function closeModal() {
-    const modal = document.getElementById('modal');
-    modal.style.display = 'none';
+    const modal = document.getElementById('modal'); // Obtener el elemento del modal
+    modal.style.display = 'none'; // Ocultar el modal
 }
 
 document.getElementById('next-button').onclick = () => {
-    currentQuestionIndex++;
+    currentQuestionIndex++; // Pasar a la siguiente pregunta
     if (currentQuestionIndex < shuffledQuestions.length) {
-        showQuestion();
+        showQuestion(); // Mostrar la siguiente pregunta
     } else {
-        showModal('¡Has completado el examen!');
-        currentQuestionIndex = 0;
-        showQuestion();
+        showModal('¡Has completado el examen!'); // Mostrar mensaje de finalización
+        currentQuestionIndex = 0; // Reiniciar el índice de la pregunta
+        showQuestion(); // Mostrar la primera pregunta nuevamente
     }
 };
 
-document.getElementById('restart-button').onclick = initializeQuiz;
+document.getElementById('restart-button').onclick = initializeQuiz; // Establecer el controlador de clic para reiniciar el cuestionario
 
 document.getElementById('light-mode').onclick = () => {
-    document.body.classList.remove('dark-mode');
+    document.body.classList.remove('dark-mode'); // Cambiar a modo claro
 };
 
 document.getElementById('dark-mode').onclick = () => {
-    document.body.classList.add('dark-mode');
+    document.body.classList.add('dark-mode'); // Cambiar a modo oscuro
 };
 
-document.getElementById('modal-close').onclick = closeModal;
+document.getElementById('modal-close').onclick = closeModal; // Establecer el controlador de clic para cerrar el modal
 
-// Inicializar el cuestionario al cargar la página
+// Inicializar el cuestionario cuando se carga la página
 initializeQuiz();

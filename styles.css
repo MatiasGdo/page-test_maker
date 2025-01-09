@@ -1,292 +1,334 @@
+/* Estilos generales para el cuerpo */
 body {
-    font-family: 'Courier New', Courier, monospace;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Courier New', Courier, monospace; /* Estilo de fuente */
+    background-color: var(--background-color); /* Color de fondo */
+    color: var(--text-color); /* Color del texto */
+    display: flex; /* Diseño de flexbox */
+    justify-content: center; /* Centrar contenido horizontalmente */
+    align-items: center; /* Centrar contenido verticalmente */
+    height: 100vh; /* Altura completa de la ventana */
+    width: 100vw; /* Ancho completo de la ventana */
+    margin: 0; /* Eliminar margen predeterminado */
+    transition: background-color 0.3s, color 0.3s; /* Transición suave para el cambio de tema */
 }
 
+/* Variables CSS para el modo claro */
 :root {
-    --background-color: #ffffff;
-    --text-color: #000000;
-    --primary-color: #007acc;
-    --primary-hover-color: #005f9e;
-    --secondary-color: #569cd6;
-    --secondary-hover-color: #3a8ec1;
-    --danger-color: #f14c4c;
-    --danger-hover-color: #d43f3f;
-    --panel-background-color: #f3f3f3;
-    --panel-border-color: #cccccc;
-    --summary-item-background: #f3f3f3;
-    --summary-item-hover: #e0e0e0;
-    --summary-item-text: #000000;
+    --background-color: #ffffff; /* Fondo claro */
+    --text-color: #000000; /* Texto oscuro */
+    --primary-color: #007acc; /* Color del botón primario */
+    --primary-hover-color: #005f9e; /* Color del botón primario al pasar el ratón */
+    --secondary-color: #569cd6; /* Color del botón secundario */
+    --secondary-hover-color: #3a8ec1; /* Color del botón secundario al pasar el ratón */
+    --danger-color: #f14c4c; /* Color del botón de peligro */
+    --danger-hover-color: #d43f3f; /* Color del botón de peligro al pasar el ratón */
+    --panel-background-color: #f3f3f3; /* Fondo del panel */
+    --panel-border-color: #cccccc; /* Borde del panel */
+    --summary-item-background: #f3f3f3; /* Fondo del ítem del resumen */
+    --summary-item-hover: #e0e0e0; /* Fondo del ítem del resumen al pasar el ratón */
+    --summary-item-text: #000000; /* Texto del ítem del resumen */
 }
 
+/* Variables CSS para el modo oscuro */
 body.dark-mode {
-    --background-color: #1e1e1e;
-    --text-color: #d4d4d4;
-    --panel-background-color: #252526;
-    --panel-border-color: #3c3c3c;
-    --summary-item-background: #252526;
-    --summary-item-hover: #333333;
-    --summary-item-text: #d4d4d4;
+    --background-color: #1e1e1e; /* Fondo oscuro */
+    --text-color: #d4d4d4; /* Texto claro */
+    --panel-background-color: #252526; /* Fondo oscuro del panel */
+    --panel-border-color: #3c3c3c; /* Borde oscuro del panel */
+    --summary-item-background: #252526; /* Fondo oscuro del ítem del resumen */
+    --summary-item-hover: #333333; /* Fondo oscuro del ítem del resumen al pasar el ratón */
+    --summary-item-text: #d4d4d4; /* Texto claro del ítem del resumen */
 }
 
+/* Estilos del botón de cambio de modo */
 .mode-switcher {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    gap: 10px;
+    position: absolute; /* Posición en la parte superior derecha */
+    top: 10px; /* 10px desde la parte superior */
+    right: 10px; /* 10px desde la derecha */
+    display: flex; /* Diseño de flexbox */
+    gap: 10px; /* Espacio entre botones */
 }
 
+/* Estilos individuales del botón de cambio de modo */
 .mode-switcher button {
-    background-color: var(--panel-background-color);
-    color: var(--text-color);
-    border: 1px solid var(--panel-border-color);
-    border-radius: 50%;
-    padding: 10px;
-    font-size: 1.5em;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
+    background-color: var(--panel-background-color); /* Fondo del botón */
+    color: var(--text-color); /* Color del texto del botón */
+    border: 1px solid var(--panel-border-color); /* Borde del botón */
+    border-radius: 50%; /* Botones redondos */
+    padding: 10px; /* Relleno dentro de los botones */
+    font-size: 1.5em; /* Tamaño de fuente grande */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    transition: background-color 0.3s, color 0.3s; /* Transición suave para el hover */
 }
 
+/* Efecto hover del botón de cambio de modo */
 .mode-switcher button:hover {
-    background-color: var(--primary-hover-color);
-    color: #ffffff;
+    background-color: var(--primary-hover-color); /* Fondo al pasar el ratón */
+    color: #ffffff; /* Color del texto al pasar el ratón */
 }
 
+/* Estilos del contenedor */
 .container {
-    display: flex;
-    background-color: var(--panel-background-color);
-    padding: 20px;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.12);
-    width: 95%;
-    height: 90%;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    display: flex; /* Diseño de flexbox */
+    background-color: var(--panel-background-color); /* Fondo del contenedor */
+    padding: 20px; /* Relleno dentro del contenedor */
+    border-radius: 6px; /* Esquinas redondeadas */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.12); /* Efecto de sombra */
+    width: 95%; /* Ancho casi completo */
+    height: 90%; /* Altura casi completa */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Transición suave para el cambio de tema */
 }
 
+/* Estilos del contenedor del cuestionario */
 #quiz-container {
-    flex: 3;
-    margin-right: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    overflow-y: auto;
+    flex: 3; /* Ocupa 3 partes del espacio flex */
+    margin-right: 20px; /* Espacio a la derecha */
+    display: flex; /* Diseño de flexbox */
+    flex-direction: column; /* Diseño en columna */
+    align-items: center; /* Centrar elementos horizontalmente */
+    height: 100%; /* Altura completa */
+    overflow-y: auto; /* Contenido desplazable */
 }
 
+/* Estilos del encabezado */
 #header {
-    position: sticky;
-    top: 0;
-    background-color: var(--panel-background-color);
-    width: 100%;
-    text-align: center;
-    z-index: 1;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--panel-border-color);
-    transition: background-color 0.3s, border-bottom 0.3s;
+    position: sticky; /* Fijar en la parte superior */
+    top: 0; /* En la parte superior */
+    background-color: var(--panel-background-color); /* Fondo del encabezado */
+    width: 100%; /* Ancho completo */
+    text-align: center; /* Centrar texto */
+    z-index: 1; /* Encima de otro contenido */
+    padding-bottom: 10px; /* Relleno en la parte inferior */
+    border-bottom: 1px solid var(--panel-border-color); /* Borde inferior */
+    transition: background-color 0.3s, border-bottom 0.3s; /* Transición suave para el cambio de tema */
 }
 
+/* Estilos del número de pregunta */
 #question-number {
-    font-size: 1.5em;
-    margin-bottom: 10px;
+    font-size: 1.5em; /* Tamaño de fuente grande */
+    margin-bottom: 10px; /* Espacio debajo */
 }
 
+/* Estilos del contenedor de la pregunta */
 #question-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    flex-grow: 1;
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
+    display: flex; /* Diseño de flexbox */
+    flex-direction: column; /* Diseño en columna */
+    justify-content: flex-start; /* Alinear elementos al inicio */
+    align-items: center; /* Centrar elementos horizontalmente */
+    flex-grow: 1; /* Crecer para llenar el espacio */
+    width: 100%; /* Ancho completo */
+    max-width: 100%; /* Ancho máximo */
+    overflow: hidden; /* Ocultar desbordamiento */
 }
 
+/* Estilos del cuadro de la pregunta */
 #question-box {
-    width: 100%;
-    padding: 20px;
-    background-color: var(--panel-background-color);
-    border: 1px solid var(--panel-border-color);
-    border-radius: 6px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    width: 100%; /* Ancho completo */
+    padding: 20px; /* Relleno dentro */
+    background-color: var(--panel-background-color); /* Color de fondo */
+    border: 1px solid var(--panel-border-color); /* Borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    margin-bottom: 20px; /* Espacio debajo */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* Efecto de sombra */
 }
 
+/* Estilos del texto de la pregunta */
 #question {
-    font-size: 2em;
-    white-space: pre-wrap;
-    text-align: center;
+    font-size: 2em; /* Tamaño de fuente grande */
+    white-space: pre-wrap; /* Preservar espacios en blanco */
+    text-align: center; /* Centrar texto */
 }
 
+/* Estilos del cuadro de respuestas */
 #answers-box {
-    width: 100%;
-    padding: 20px;
-    background-color: var(--panel-background-color);
-    border: 1px solid var(--panel-border-color);
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    width: 100%; /* Ancho completo */
+    padding: 20px; /* Relleno dentro */
+    background-color: var(--panel-background-color); /* Color de fondo */
+    border: 1px solid var(--panel-border-color); /* Borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* Efecto de sombra */
 }
 
+/* Estilos del contenedor de respuestas */
 #answers {
-    width: 100%;
+    width: 100%; /* Ancho completo */
 }
 
+/* Estilos del botón de respuesta */
 #answers button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 15px;
-    background-color: var(--primary-color);
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.2em;
-    white-space: pre-wrap;
-    transition: background-color 0.3s;
+    display: block; /* Mostrar como bloque */
+    width: 100%; /* Ancho completo */
+    margin: 10px 0; /* Margen vertical */
+    padding: 15px; /* Relleno dentro */
+    background-color: var(--primary-color); /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    font-size: 1.2em; /* Tamaño de fuente */
+    white-space: pre-wrap; /* Preservar espacios en blanco */
+    transition: background-color 0.3s; /* Transición suave para el hover */
 }
 
+/* Efecto hover del botón de respuesta */
 #answers button:hover {
-    background-color: var(--primary-hover-color);
+    background-color: var(--primary-hover-color); /* Fondo al pasar el ratón */
 }
 
+/* Estilos del botón de respuesta seleccionado */
 #answers button.selected {
-    background-color: var(--secondary-color);
-    color: #ffffff;
+    background-color: var(--secondary-color); /* Fondo seleccionado */
+    color: #ffffff; /* Color del texto seleccionado */
 }
 
+/* Estilos del campo de texto */
 #answers input[type="text"] {
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    border: 1px solid var(--panel-border-color);
-    border-radius: 6px;
-    font-size: 1.2em;
-    transition: border-color 0.3s;
-    background-color: var(--panel-background-color);
-    color: var(--text-color);
+    width: 100%; /* Ancho completo */
+    padding: 15px; /* Relleno dentro */
+    margin: 10px 0; /* Margen vertical */
+    border: 1px solid var(--panel-border-color); /* Borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    font-size: 1.2em; /* Tamaño de fuente */
+    transition: border-color 0.3s; /* Transición suave para el enfoque */
+    background-color: var(--panel-background-color); /* Color de fondo */
+    color: var(--text-color); /* Color del texto */
 }
 
+/* Efecto de enfoque del campo de texto */
 #answers input[type="text"]:focus {
-    border-color: var(--primary-color);
-    outline: none;
+    border-color: var(--primary-color); /* Color del borde al enfocar */
+    outline: none; /* Sin contorno */
 }
 
+/* Estilos del botón siguiente */
 #next-button {
-    margin-top: 20px;
-    padding: 15px 30px;
-    background-color: var(--secondary-color);
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: background-color 0.3s;
+    margin-top: 20px; /* Espacio arriba */
+    padding: 15px 30px; /* Relleno dentro */
+    background-color: var(--secondary-color); /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    font-size: 1.2em; /* Tamaño de fuente */
+    transition: background-color 0.3s; /* Transición suave para el hover */
 }
 
+/* Efecto hover del botón siguiente */
 #next-button:hover {
-    background-color: var(--secondary-hover-color);
+    background-color: var(--secondary-hover-color); /* Fondo al pasar el ratón */
 }
 
+/* Estilos del panel de resumen */
 #summary-panel {
-    flex: 1;
-    background-color: var(--panel-background-color);
-    padding: 20px;
-    border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.12);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    overflow-y: auto;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    flex: 1; /* Ocupa 1 parte del espacio flex */
+    background-color: var(--panel-background-color); /* Color de fondo */
+    padding: 20px; /* Relleno dentro */
+    border-radius: 6px; /* Esquinas redondeadas */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.12); /* Efecto de sombra */
+    flex-direction: column; /* Diseño en columna */
+    justify-content: flex-start; /* Alinear elementos al inicio */
+    align-items: center; /* Centrar elementos horizontalmente */
+    overflow-y: auto; /* Contenido desplazable */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Transición suave para el cambio de tema */
+    text-align: left; /* Alinear el texto a la izquierda */
 }
 
+/* Estilos del encabezado del panel de resumen */
 #summary-panel h2 {
-    margin-top: 0;
-    font-size: 1.5em;
+    margin-top: 0; /* Sin margen arriba */
+    font-size: 1.5em; /* Tamaño de fuente */
+}
+
+/* Estilos de la lista de resumen */
+#summary-list {
+    list-style: none; /* Sin estilo de lista */
+    padding: 0; /* Sin relleno */
+    width: 100%; /* Ancho completo */
+    max-height: 600px; /* Aumentar la altura según sea necesario */
+    overflow-y: auto; /* Permitir el desplazamiento vertical */
+}
+
+/* Estilos del ítem de la lista de resumen */
+#summary-list li {
+    margin: 10px 0; /* Margen vertical */
+    padding: 10px; /* Relleno dentro */
+    background-color: var(--summary-item-background); /* Color de fondo */
+    border-radius: 6px; /* Esquinas redondeadas */
+    font-size: 1.2em; /* Tamaño de fuente */
+    display: flex; /* Diseño de flexbox */
+    justify-content: space-between; /* Espacio entre elementos */
+    align-items: center; /* Centrar elementos verticalmente */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    transition: background-color 0.3s, color 0.3s; /* Transición suave para el hover */
+    color: var(--summary-item-text); /* Color del texto */
+}
+
+/* Efecto hover del ítem de la lista de resumen */
+#summary-list li:hover {
+    background-color: var(--summary-item-hover); /* Fondo al pasar el ratón */
+}
+
+/* Estilos del botón de reinicio */
+#restart-button {
+    margin-top: 20px; /* Espacio arriba */
+    padding: 15px 30px; /* Relleno dentro */
+    background-color: var(--danger-color); /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    font-size: 1.2em; /* Tamaño de fuente */
+    transition: background-color 0.3s; /* Transición suave para el hover */
+    display: block;
+    margin: 20px auto; /* Centrar el botón de reiniciar */
+}
+
+/* Efecto hover del botón de reinicio */
+#restart-button:hover {
+    background-color: var(--danger-hover-color); /* Fondo al pasar el ratón */
+}
+
+/* Estilos del modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Posición fija */
+    z-index: 1000; /* Encima de otro contenido */
+    left: 0; /* Ancho completo */
+    top: 0; /* Altura completa */
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Altura completa */
+    overflow: auto; /* Contenido desplazable */
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo semitransparente */
+}
+
+/* Estilos del contenido del modal */
+.modal-content {
+    background-color: var(--panel-background-color); /* Color de fondo */
+    margin: 15% auto; /* Centrado verticalmente */
+    padding: 20px; /* Relleno dentro */
+    border: 1px solid var(--panel-border-color); /* Borde */
+    width: 80%; /* 80% de ancho */
+    max-width: 500px; /* Ancho máximo */
+    border-radius: 6px; /* Esquinas redondeadas */
+    text-align: center; /* Centrar texto */
+}
+
+/* Estilos del botón de cierre */
+.close {
+    color: var(--text-color); /* Color del texto */
+    float: right; /* Flotar a la derecha */
+    font-size: 28px; /* Tamaño de fuente grande */
+    font-weight: bold; /* Texto en negrita */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+}
+
+/* Efecto hover y enfoque del botón de cierre */
+.close:hover,
+.close:focus {
+    color: var(--primary-hover-color); /* Color al pasar el ratón y enfocar */
 }
 
 #summary-list {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-}
-
-#summary-list li {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: var(--summary-item-background);
-    border-radius: 6px;
-    font-size: 1.2em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    color: var(--summary-item-text);
-}
-
-#summary-list li:hover {
-    background-color: var(--summary-item-hover);
-}
-
-#restart-button {
-    margin-top: 20px;
-    padding: 15px 30px;
-    background-color: var(--danger-color);
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: background-color 0.3s;
-}
-
-#restart-button:hover {
-    background-color: var(--danger-hover-color);
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-    background-color: var(--panel-background-color);
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid var(--panel-border-color);
-    width: 80%;
-    max-width: 500px;
-    border-radius: 6px;
-    text-align: center;
-}
-
-.close {
-    color: var(--text-color);
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: var(--primary-hover-color);
+    max-height: 600px; /* Aumentar la altura según sea necesario */
+    overflow-y: auto; /* Permitir el desplazamiento vertical */
 }
