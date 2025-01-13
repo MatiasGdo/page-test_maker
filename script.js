@@ -946,10 +946,14 @@ function showQuestion() {
         input.placeholder = 'Escribe tu respuesta aquí'; // Establecer el texto del marcador de posición
         answersElement.appendChild(input); // Agregar la entrada al elemento de respuestas
     } else {
-        question.answers.forEach((answer, index) => {
+        const shuffledAnswers = question.answers.map((answer, index) => ({ answer, index }));
+        shuffle(shuffledAnswers); // Mezclar las respuestas
+
+        shuffledAnswers.forEach(({ answer, index }) => {
             const button = document.createElement('button'); // Crear un botón para cada respuesta
-            button.textContent = answer; // Establecer el texto del botón
+            button.textContent = answer.slice(3); // Establecer el texto del botón sin la letra
             button.onclick = () => toggleAnswer(index); // Establecer el controlador de clic del botón
+            button.dataset.index = index; // Establecer el índice de la respuesta en el botón
             answersElement.appendChild(button); // Agregar el botón al elemento de respuestas
         });
     }
@@ -981,8 +985,8 @@ function toggleAnswer(index) {
         selectedAnswers = [index]; // Seleccionar respuesta única
     }
     const buttons = document.querySelectorAll('#answers button'); // Obtener todos los botones de respuesta
-    buttons.forEach((button, i) => {
-        if (selectedAnswers.includes(i)) {
+    buttons.forEach((button) => {
+        if (selectedAnswers.includes(parseInt(button.dataset.index))) {
             button.classList.add('selected'); // Resaltar botón seleccionado
         } else {
             button.classList.remove('selected'); // Quitar resalto de botón no seleccionado
