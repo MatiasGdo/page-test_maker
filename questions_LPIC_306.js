@@ -1,5 +1,5 @@
 // Array de preguntas para el cuestionario
-const questions = [
+const questions_LPIC_306 = [
     {
         question: "Which of the following modes for bonding network interfaces uses only one of its member interfaces at a time?",
         type: "opcion",
@@ -121,7 +121,7 @@ const questions = [
     {
         question: "Which of the following HAProxy configuration options defines an ACL that applies to all HTTP request whose target host starts with www?",
         type: "opcion",
-        answers: ["A. acl host_www –rx host /^www/", "B. acl host_www hdr_beg(host) –i www", "C. acl host_www host.regex(`www.*´)", "D. acl host_www HTTP_HOST CONTAINS www%", "E. acl host_www host =~ /^www.*/"],
+        answers: ["A. acl host_www –rx host /^www/", "B. acl host_www hdr_beg(host) –i www", "C. acl host_www host.regex('www.*')", "D. acl host_www HTTP_HOST CONTAINS www%", "E. acl host_www host =~ /^www.*/"],
         correct: 1
     },
     {

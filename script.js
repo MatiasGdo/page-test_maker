@@ -2,25 +2,32 @@
 async function detectQuestionFiles() {
     const questionSets = {};
     
-    // Lista SOLO de los archivos que realmente existen
-    const potentialFiles = [
+    console.log('🔍 Detectando archivos automáticamente...');
+    
+    // Lista optimizada: SOLO los archivos que realmente existen (carga rápida)
+    const allFiles = [
+        'questions_LPIC_306.js',
+        'questions_LPIC_test.js',
         'questions_devops_part1.js',
-        'questions_devops_part2.js', 
+        'questions_devops_part2.js',
         'questions_devops_part3.js',
         'questions_devops_part4.js',
-        'questions_aws_part1.js',
         'questions_docker_part1.js',
-        'questions_LPIC_306.js'
+        'questions_aws_part1.js'
     ];
     
+    console.log(`🔍 Verificando ${allFiles.length} archivos conocidos (carga rápida)...`);
+    
     // Verificar qué archivos existen haciendo peticiones HEAD
-    for (const fileName of potentialFiles) {
+    let foundCount = 0;
+    for (const fileName of allFiles) {
         try {
             const response = await fetch(fileName, {
                 method: 'HEAD'
             });
             
             if (response.ok) {
+                foundCount++;
                 // Extraer el nombre del archivo después de "questions_" y antes de ".js"
                 const nameMatch = fileName.match(/^questions_(.+)\.js$/);
                 if (nameMatch) {
@@ -34,6 +41,8 @@ async function detectQuestionFiles() {
                         name: formattedName,
                         questions: null
                     };
+                    
+                    console.log(`✅ Encontrado: ${fileName} -> "${formattedName}"`);
                 }
             }
         } catch (error) {
@@ -42,6 +51,7 @@ async function detectQuestionFiles() {
         }
     }
     
+    console.log(`🎯 Total archivos detectados: ${foundCount} de ${allFiles.length} probados`);
     return questionSets;
 }
 
@@ -63,59 +73,139 @@ function shuffle(array) {
     }
 }
 
-// Función para cargar un conjunto de preguntas
+// Función para cargar un conjunto de preguntas (SOLUCIÓN FINAL)
 async function loadQuestionSet(fileName) {
     try {
-        if (questionSets[fileName].questions) {
+        console.log(`🔄 Intentando cargar: ${fileName}`);
+        
+        if (questionSets[fileName]?.questions) {
             // Las preguntas ya están cargadas
             questions = questionSets[fileName].questions;
+            console.log(`✅ Preguntas ya cargadas: ${questions.length} preguntas`);
         } else {
             // Cargar las preguntas desde el archivo
             const response = await fetch(fileName);
             if (!response.ok) {
-                throw new Error(`No se pudo cargar el archivo: ${fileName}`);
+                throw new Error(`HTTP ${response.status}: No se pudo cargar el archivo ${fileName}`);
             }
             
             const scriptText = await response.text();
+            console.log(`📄 Archivo cargado: ${fileName}, tamaño: ${scriptText.length} caracteres`);
             
-            // Crear y ejecutar el script
-            const script = document.createElement('script');
-            script.textContent = scriptText;
-            document.head.appendChild(script);
+            // SOLUCIÓN: Parsear el contenido como datos JSON-like en lugar de ejecutar como script
+            // Extraer la parte del array usando regex (más flexible)
+            console.log(`🔍 Buscando array en ${fileName}...`);
+            let arrayMatch = scriptText.match(/const\s+questions_[a-zA-Z0-9_]+\s*=\s*(\[[\s\S]*\]);/);
             
-            // Esperar un momento para que el script se ejecute
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-            // Extraer el nombre de la variable del contenido del archivo
-            const variableMatch = scriptText.match(/const\s+(questions_[a-zA-Z0-9_]+)\s*=/);
-            if (!variableMatch) {
-                throw new Error(`No se pudo encontrar la variable de preguntas en ${fileName}`);
+            // Si no encuentra el patrón específico, intentar con el patrón genérico
+            if (!arrayMatch) {
+                console.log(`⚠️ Patrón específico no encontrado, intentando patrón genérico...`);
+                arrayMatch = scriptText.match(/const\s+questions\s*=\s*(\[[\s\S]*\]);/);
             }
             
-            const variableName = variableMatch[1];
-            console.log(`Buscando variable: ${variableName}`);
+            if (!arrayMatch) {
+                console.error(`❌ No se encontró ningún patrón de array en ${fileName}`);
+                console.log(`Primeros 500 caracteres del archivo:`, scriptText.substring(0, 500));
+                console.log(`Últimos 200 caracteres del archivo:`, scriptText.substring(scriptText.length - 200));
+                throw new Error(`No se pudo extraer el array de preguntas de ${fileName}`);
+            }
             
-            // Verificar que la variable esté disponible
-            console.log(`Variables disponibles:`, Object.keys(window).filter(key => key.startsWith('questions_')));
+            console.log(`✅ Patrón encontrado en ${fileName}`);
             
-            if (window[variableName]) {
-                questions = window[variableName];
-                questionSets[fileName].questions = questions;
-                console.log(`✅ Cargadas ${questions.length} preguntas de ${variableName}`);
-            } else {
-                // Fallback: intentar con eval() como último recurso
+            
+            
+            const arrayContent = arrayMatch[1];
+            console.log(`🎯 Array extraído de ${fileName}, tamaño: ${arrayContent.length} caracteres`);
+            
+            // Parsear el array usando diferentes estrategias según el tamaño
+            console.log(`⚙️ Parseando array de ${fileName}...`);
+            
+            // Para archivos grandes, usar una estrategia más robusta
+            if (arrayContent.length > 25000) {
+                console.log(`📊 Archivo grande detectado (${arrayContent.length} chars), usando Function constructor...`);
+                
+                // DIAGNÓSTICO ESPECIAL para LPIC_306
+                if (fileName.includes('LPIC_306')) {
+                    console.log(`🔍 DIAGNÓSTICO ESPECIAL para ${fileName}:`);
+                    console.log(`- Tamaño total del archivo: ${scriptText.length} caracteres`);
+                    console.log(`- Tamaño del array extraído: ${arrayContent.length} caracteres`);
+                    console.log(`- Primeros 100 chars del array:`, arrayContent.substring(0, 100));
+                    console.log(`- Últimos 100 chars del array:`, arrayContent.substring(arrayContent.length - 100));
+                    
+                    // Verificar si hay caracteres problemáticos
+                    const hasQuotes = arrayContent.includes('"');
+                    const hasSingleQuotes = arrayContent.includes("'");
+                    const hasBackslashes = arrayContent.includes('\\');
+                    const hasNewlines = arrayContent.includes('\n');
+                    
+                    console.log(`- Contiene comillas dobles: ${hasQuotes}`);
+                    console.log(`- Contiene comillas simples: ${hasSingleQuotes}`);
+                    console.log(`- Contiene backslashes: ${hasBackslashes}`);
+                    console.log(`- Contiene saltos de línea: ${hasNewlines}`);
+                }
+                
                 try {
-                    questions = eval(variableName);
-                    questionSets[fileName].questions = questions;
-                    console.log(`✅ Cargadas ${questions.length} preguntas de ${variableName} (via eval)`);
-                } catch (evalError) {
-                    console.error(`❌ Variable ${variableName} no encontrada. Variables disponibles:`, Object.keys(window).filter(key => key.startsWith('questions_')));
-                    throw new Error(`Variable ${variableName} no encontrada después de cargar ${fileName}`);
+                    // Crear una función que ejecute el parsing en un contexto limpio
+                    const func = new Function('return ' + arrayContent);
+                    questions = func();
+                    console.log(`✅ Array parseado con Function constructor: ${questions.length} preguntas`);
+                } catch (funcError) {
+                    console.log(`⚠️ Function constructor falló para ${fileName}`);
+                    console.error('Error Function detallado:', funcError.name, funcError.message);
+                    console.log('Stack trace:', funcError.stack);
+                    
+                    // Intentar parsing por chunks
+                    console.log(`🔧 Intentando parsing por chunks...`);
+                    try {
+                        // Dividir en chunks más pequeños y validar cada uno
+                        const chunkSize = 10000;
+                        let validArray = true;
+                        
+                        for (let i = 0; i < arrayContent.length; i += chunkSize) {
+                            const chunk = arrayContent.substring(i, i + chunkSize);
+                            console.log(`Validando chunk ${Math.floor(i/chunkSize) + 1}, posición ${i}-${i + chunkSize}`);
+                        }
+                        
+                        // Si llegamos aquí, intentar eval
+                        questions = eval(`(${arrayContent})`);
+                        console.log(`✅ Array parseado con eval después de validación: ${questions.length} preguntas`);
+                    } catch (evalError) {
+                        console.error(`❌ Ambos métodos fallaron para ${fileName}:`);
+                        console.error('Error eval:', evalError.name, evalError.message);
+                        console.log(`Primeros 300 caracteres del array:`, arrayContent.substring(0, 300));
+                        throw new Error(`Error parseando preguntas en ${fileName}: ${evalError.message}`);
+                    }
+                }
+            } else {
+                console.log(`📄 Archivo pequeño, usando JSON.parse primero...`);
+                try {
+                    // Para archivos pequeños, usar JSON.parse primero
+                    questions = JSON.parse(arrayContent);
+                    console.log(`✅ Array parseado con JSON.parse: ${questions.length} preguntas`);
+                } catch (jsonError) {
+                    console.log(`⚠️ JSON.parse falló, intentando con eval...`);
+                    try {
+                        questions = eval(`(${arrayContent})`);
+                        console.log(`✅ Array parseado con eval: ${questions.length} preguntas`);
+                    } catch (evalError) {
+                        console.error(`❌ Error parseando el array de ${fileName}:`, evalError);
+                        console.log(`Primeros 200 caracteres del array:`, arrayContent.substring(0, 200));
+                        throw new Error(`Error parseando preguntas en ${fileName}: ${evalError.message}`);
+                    }
                 }
             }
             
-            // Limpiar el script del DOM
-            document.head.removeChild(script);
+            if (!questions || !Array.isArray(questions)) {
+                throw new Error(`El contenido parseado no es un array válido`);
+            }
+            
+            // Guardar en cache
+            if (!questionSets[fileName]) {
+                questionSets[fileName] = { name: fileName, questions: null };
+            }
+            questionSets[fileName].questions = questions;
+            
+            console.log(`✅ Cargadas ${questions.length} preguntas directamente del array`);
         }
         
         // Inicializar el cuestionario con las nuevas preguntas
