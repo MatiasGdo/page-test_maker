@@ -1,0 +1,177 @@
+const questions_part4 = [
+    {
+        question: "Which of the following tasks are achievable using docker-machine? (Choose THREE correct answers)",
+        type: "varias",
+        answers: ["A. Set environment variables to configure the docker command.", "B. Install a new Docker host in a virtual machine.", "C. Migrate running containers from one Docker host to another.", "D. Open an interactive Shell on a remote Docker host using an SSH connection.", "E. Start and stop Docker containers on remote Docker hosts."],
+        correct: [4, 1, 3]
+    },
+    {
+        question: "When running an Ansible playbook referring to vault-encrypted data files, which parameters can be used to pass the decryption key to ansible-playbook? (Choose TWO correct answers)",
+        type: "varias",
+        answers: ["A. --vault-password-file", "B. --password-file", "C. --ask-pass", "D. --ask-vault-pass", "E. --vault-pass"],
+        correct: [0, 3]
+    },
+    {
+        question: "After a node's configuration is changed on a Puppet master, how can the node be instructed to apply the new configuration immediately if the node runs a Puppet agent as a background service?",
+        type: "opcion",
+        answers: ["A. Run puppet agent --node all --refresh on the master.", "B. Restart the puppet master process.", "C. Run puppet agent –t on the node.", "D. Run puppet refresh on the node.", "E. Run puppet master --distribute on the master."],
+        correct: 2
+    },
+    {
+        question: "Which of the following expressions are valid Ansible variable names? (Choose TWO correct answers)",
+        type: "varias",
+        answers: ["A. example_var", "B. example.var", "C. example var", "D. example-var", "E. examplevar"],
+        correct: [0, 4]
+    },
+    {
+        question: "Which variable is used in the Ansible inventory file to specify the location of an SSH private key file?",
+        type: "opcion",
+        answers: ["A. ansible_private_key_file", "B. ansible_private_key", "C. ansible_ssh_key_file", "D. ansible_ssh_login_credentials", "E. ansible_ssh_private_key_file"],
+        correct: 4
+    },
+    {
+        question: "Which of the following functions are supported by the ansible copy module? (Choose THREE correct answers)",
+        type: "varias",
+        answers: ["A. Create a backup of the original target file.", "B. Append text or data to an existing file.", "C. Set the owner of a file or directory on the target system.", "D. Decompress a file on the target system.", "E. Set permissions of a file or directory on the target system."],
+        correct: [3, 4, 0]
+    },
+    {
+        question: "What Chef Solo?",
+        type: "opcion",
+        answers: ["A. A simplified configuration format for Chef which provides only a subset of the original Chef configuration options.", "B. A special Linux distribution which automatically reverts any change to the system not applied using Chef.", "C. A tool to use Chef to manage a local system instead of using a distributed chef infrastructure.", "D. An extension to Chef to install operating systems on bare metal servers of virtual machines.", "E. A package manager that retrieves software installed using Chef in the generic Chef Menu Format, CMF, instead of using the target."],
+        correct: 2
+    },
+    {
+        question: "Which file contains the global Ansible configuration?",
+        type: "opcion",
+        answers: ["A. /etc/ansible/all.vars", "B. /etc/ansible/master.conf", "C. /etc/ansible.d/main.conf", "D. /etc/ansible.conf", "E. /etc/ansible/ansible.cfg"],
+        correct: 4
+    },
+    {
+        question: "Which criteria can packet filtering firewalls use to permit or suppress traffic? (Choose TWO correct answers)",
+        type: "varias",
+        answers: ["A. TCP and UDP ports", "B. Object IDs in REST URLs", "C. HTTP Cookies", "D. Common Names in X.509 certificates.", "E. IP addresses"],
+        correct: [4, 0]
+    },
+    {
+        question: "Consider the following log message:\n\nJun 30 00:36:49 headnode clustermanager{12353}: new node 198.51.100.103\nThis log message is processed by the following Logstash filter:\n\nGrok {\n     Match => { \"message\", \"%{SYSLOGBASE} new node %{IPORHOST:node}\" }\n}\n\nWhich of the variables below are contained in the resulting event object? (Choose TWO correct answers)",
+        type: "varias",
+        answers: ["A. message", "B. grok", "C. node", "D. SYSLOGBASE", "E. IPORHOST"],
+        correct: [3, 4]
+    },
+    {
+        question: "What has to be done to configure Filebeat to submit log information to Logstash? (Choose TWO correct answers)",
+        type: "varias",
+        answers: ["A. Install Filebeat on the Logstash server and allow the Linux user running the Filebeat daemon to login to the remote host via SSH without using a password.", "B. Replace the input section of the Logstash configuration by a filebeat section.", "C. Add an output.logstash section to the Filebeat configuration and specify the Logstash server in that section's hosts attribute.", "D. Add the IP address of the Filebeat node to the option accept option in the section acl of the Logstash input configuration.", "E. Add a beats section to the input section of the Logstash configuration."],
+        correct: [2, 4]
+    },
+    {
+        question: "What happens when the following command is executed twice in succession?\n\ndocker run –tid –v data:/data debian bash",
+        type: "opcion",
+        answers: ["A. The container resulting from the second invocation can only read the content of /data/ and can not change it.", "B. The second command invocation fails with an error stating that the volume data is already associated with a running container.", "C. Each container is equipped with its own independent data volume, available at /data/ in the respective container.", "D. Both containers share the container of the data volume, have full permissions to alter its content and mutually see their respective changes.", "E. The original content of the contents of the data is available in both containers, although changes stay local within each container."],
+        correct: 3
+    },
+    {
+        question: "What happens if a grok filter in Logstash processes a log message which dose not match the pattern in the filter's match property?",
+        type: "opcion",
+        answers: ["A. The message is passed to the unparseable output and no other filters are applied to it.", "B. The message is dropped and no other filters are applied to it.", "C. The message is kept unchanged and no other filters are applied to it.", "D. The message is truncated to those parts which have been matched by the filters.", "E. The message is flagged with the _grokparsefailure tag."],
+        correct: 4
+    },
+    {
+        question: "What kind of data is provided to Prometheus by a monitored service?",
+        type: "opcion",
+        answers: ["A. The monitored service provides metric values for keys defined in Prometheus' monitoring schema.", "B. The monitored service provides arbitrary pairs of keys and metric values which are scraped by Prometheus.", "C. The monitored service provides an interface which Prometheus queries for the value of a specific metric key.", "D. The monitored service provides one metric value which replaces the former value of the service's register in Prometheus", "E. The monitored service provides a status in terms of one of three well defined service states."],
+        correct: 2
+    },
+    {
+        question: "Which of the following best practices help to handle large amounts of log data when using the Elastic Stack for log management? (Choose THREE correct answers)",
+        type: "varias",
+        answers: ["A. Leverage Elasticsearch indexes for the deletion of expired log data.", "B. Disable logging for all services and components which are externally monitored.", "C. Frequently rotate logs on their origin systems and delete logs that were shipped to Logstash.", "D. Exclude obviously meaningless log data from log processing as early as possible.", "E. Disable logging generally and only enable it in case of failures or errors."],
+        correct: [3, 2, 0]
+    },
+    {
+        question: "Which of the following scenarios describes SSL offloading?",
+        type: "opcion",
+        answers: ["A. To use HTTPS for multiple hosts in the same domain, a wildcard certificate is used on all nodes hosting the services.", "B. The main content of a website is delivered using HTTPS, assets such as images or scripts are delivered using HTTP.", "C. Requests which arrive encrypted via HTTPS are answered with redirects to HTTP URLs to improve performance.", "D. Incoming HTTPS connections are received by a load balancer which handles the encryption and passes decrypted requests on backend servers.", "E. Requests which arrive in plain text via HTTP are redirected to HTTPS URLs to enforce encryption."],
+        correct: 3
+    },
+    {
+        question: "When can an SQL injection attack happen?",
+        type: "opcion",
+        answers: ["A. When strings of arbitrary length are passed to a database so they can exceed the length of data type or data field.", "B. When SQL statements are stored as database content and might be returned unchanged to a client querying the database.", "C. When characters or string received from an external source are passed unchanged to a database so they can include SQL.", "D. When database queries of an application are redirected to another server which then receives confidential information and might return manipulated data.", "E. When an API which causes writes to the database can be triggered remotely without rate limits or other restrictions."],
+        correct: 3
+    },
+    {
+        question: "Which git command restores changes that were saved using git stash save?",
+        type: "opcion",
+        answers: ["A. git stash revert", "B. git stash restore", "C. git stash merge", "D. git stash commit", "E. git stash pop"],
+        correct: 4
+    },
+    {
+        question: "What the benefit of feature toggles? (Choose TWO correct answers)",
+        type: "varias",
+        answers: ["A. Feature toggles start microservices on demand when their functionality is requested.", "B. Feature toggles reduce the build time by excluding unnecessary features from a build.", "C. Feature toggles decouple technical deployments from the official launch of a product.", "D. Feature toggles can enable new features for advanced users before globally releasing them.", "E. Feature toggles eliminate the need for feature branches in an SCM during development."],
+        correct: [2, 4]
+    },
+    {
+        question: "The following output is generated by git branch:\n\n  development\n  master\n  production\n* staging\n\nHow can all changes from the development branch be integrated into the staging branch?",
+        type: "opcion",
+        answers: ["A. git merge development", "B. git cp --merge development", "C. git merge development..staging", "D. git stash development", "E. git branch --merge development"],
+        correct: 0
+    },
+    {
+        question: "Where should containerized applications store persistent data such as user uploaded files or billing information? (choose TWO correct answers)",
+        type: "varias",
+        answers: ["A. In files inside the container that are exclusively locked by the application.", "B. In database server which is installed within the container", "C. In dedicated, well known directory trees within the container.", "D. In external systems such as databases or object stores.", "E. In memory with an API to download a serialized dump of the data."],
+        correct: [3, 1]
+    },
+    {
+        question: "Given the following Kubernetes deployment:\n\nNAME   DESIRED               CURRENT            UP-TO-DATE      AVAILABLE         AGE\nmyapp  2                             2                             2                             0                             17s\n\nWhich command scales the application to five containers?",
+        type: "opcion",
+        answers: ["A. kubectl deployment myapp replicas=5", "B. kubectl edit deployment/myapp replicas=5", "C. kubectl replicate deployment/myapp +3", "D. kubectl scale deployment/myapp –replicas=5", "E. kubectl clone deployment/myapp 3"],
+        correct: 3
+    },
+    {
+        question: "Where should a Jenkinsfile describing a build pipeline be located?",
+        type: "opcion",
+        answers: ["A. As build artifact in the default artifact store associated with the respective Jenkins project.", "B. At the top level of the SCM repository being build.", "C. In the Jenkins folder next to the workspace directory.", "D. On a web server with an HTTP URL Jenkins can Access.", "E. In an SCM dedicated repository dedicated to hold Jenkins configuration files."],
+        correct: 4
+    },
+    {
+        question: "After creating a new Docker network using the following command:\n\ndocker network create –driver bridge isolated_nw\n\nwhich parameter must be added to docker create in order to attach a container to the network?",
+        type: "opcion",
+        answers: ["A. --alias=isolated_nw", "B. --network=isolated_nw", "C. --ethernet=isolated_nw", "D. --attach=isolated_nw", "E. --eth0=isolated_nw"],
+        correct: 1
+    },
+    {
+        question: "The file myapp.yml exists with the following content:\n\nversion: \"3\"\n\nservices:\n\n  frontend:\n\n      image: frontend\n\n      ports:\n\n\"80:80\"\n  backend:\n\n       image: backend\n\n       deploy:\n\n          replicas: 2\n\nGiven that file was successfully processed by docker stack deploy myapp –compose—file myapp.yml,  which of the following objects might be created? (Choose THREE correct answers)",
+        type: "varias",
+        answers: ["A. A container called myapp_backend.2.ymia7v7of5g02j3j3i1btt8z.", "B. An overlay network called myapp_default.", "C. A volume called myapp_frontend.1.", "D. A node called myapp_frontend.", "E. A service called myapp_frontend."],
+        correct: [1, 0, 4]
+    },
+    {
+        question: "Which sub command of docker volume deletes all volumes which are not associated with a container? (Specify ONLY the sub command without any path or parameter)",
+        type: "escribir",
+        correct: "prune"
+    },
+    {
+        question: "Which property of a Kubernetes Deployment specifies the number of instances to create for a specific Pod?  (Specify ONLY the option name, no matter of its location in the object hierarchy)",
+        type: "escribir",
+        correct: "replicas"
+    },
+    {
+        question: "Which Ansible command line tool is used to download, install and manage roles from a public community site or an SCM such as Git? (Specify ONLY the command without any path or parameters)",
+        type: "escribir",
+        correct: "ansible-galaxy"
+    },
+    {
+        question: "What is the default URL Prometheus tries to retrieve from a target when gathering monitoring information? (Specify the Full URL, without any host name or scheme)",
+        type: "escribir",
+        correct: "http://<host>:9090/metrics"
+    },
+    {
+        question: "A docker swarm contains the following node:\n\nID                             HOSTNAME              STATUS                  AVAILABILITY             MANAGERSTATUS\n162jocpx41h8kdjt98kao8qek      node-5                Ready                   active                   Reachable\n2ds7z8m2poifjsiqbngbsmavp      node-4                Ready                   active                   Reachable\nfv7p1b2i2swo916zypyohiyfa      node-3                Ready                   active                  \nhrr0eouc6qhnoihndt8uu610g      node-2                Ready                   active                                                  \ntxgjvd0azv0mzsjj6o7ob00h8   *  node-1                Ready                   active                   Leader\n\nWhich of the nodes should be configured as DOCKER_HOST in order to run services on the swarm? (Specify ONLY the HOSTNAME of one of the potential target nodes)",
+        type: "escribir",
+        correct: "node-3"
+    }
+];

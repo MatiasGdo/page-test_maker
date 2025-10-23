@@ -9,35 +9,83 @@ body {
     height: 100vh; /* Altura completa de la ventana */
     width: 100vw; /* Ancho completo de la ventana */
     margin: 0; /* Eliminar margen predeterminado */
+    padding: 0; /* Eliminar padding predeterminado */
     transition: background-color 0.3s, color 0.3s; /* Transición suave para el cambio de tema */
+    overflow-x: hidden; /* Eliminar scroll horizontal */
+    box-sizing: border-box; /* Incluir padding y border en el ancho */
+}
+
+/* Reset universal para evitar overflow */
+* {
+    box-sizing: border-box;
 }
 
 /* Variables CSS para el modo claro */
 :root {
     --background-color: #ffffff; /* Fondo claro */
-    --text-color: #000000; /* Texto oscuro */
+    --text-color: #2c3e50; /* Texto más suave */
     --primary-color: #007acc; /* Color del botón primario */
     --primary-hover-color: #005f9e; /* Color del botón primario al pasar el ratón */
     --secondary-color: #569cd6; /* Color del botón secundario */
     --secondary-hover-color: #3a8ec1; /* Color del botón secundario al pasar el ratón */
     --danger-color: #f14c4c; /* Color del botón de peligro */
     --danger-hover-color: #d43f3f; /* Color del botón de peligro al pasar el ratón */
-    --panel-background-color: #f3f3f3; /* Fondo del panel */
-    --panel-border-color: #cccccc; /* Borde del panel */
-    --summary-item-background: #f3f3f3; /* Fondo del ítem del resumen */
-    --summary-item-hover: #e0e0e0; /* Fondo del ítem del resumen al pasar el ratón */
-    --summary-item-text: #000000; /* Texto del ítem del resumen */
+    --panel-background-color: #f8f9fa; /* Fondo del panel más suave */
+    --panel-border-color: #dee2e6; /* Borde del panel más suave */
+    --summary-item-background: #f8f9fa; /* Fondo del ítem del resumen */
+    --summary-item-hover: #e9ecef; /* Fondo del ítem del resumen al pasar el ratón */
+    --summary-item-text: #2c3e50; /* Texto del ítem del resumen */
+    
+    /* Variables para botones de respuesta */
+    --answer-button-bg: #ffffff;
+    --answer-button-text: #2c3e50;
+    --answer-button-border: #ced4da;
+    --answer-button-hover-bg: #e3f2fd;
+    --answer-button-hover-border: #90caf9;
+    --answer-button-selected-bg: #bbdefb;
+    --answer-button-selected-text: #1565c0;
+    --answer-button-selected-border: #42a5f5;
+    --answer-button-selected-glow: rgba(66, 165, 245, 0.3);
+    
+    /* Variables para respuestas correctas e incorrectas */
+    --correct-answer-bg: #c8e6c9;
+    --correct-answer-text: #2e7d32;
+    --correct-answer-border: #66bb6a;
+    --correct-answer-glow: rgba(76, 175, 80, 0.3);
+    --incorrect-answer-bg: #ffcdd2;
+    --incorrect-answer-text: #c62828;
+    --incorrect-answer-border: #e57373;
 }
 
 /* Variables CSS para el modo oscuro */
 body.dark-mode {
-    --background-color: #1e1e1e; /* Fondo oscuro */
-    --text-color: #d4d4d4; /* Texto claro */
-    --panel-background-color: #252526; /* Fondo oscuro del panel */
-    --panel-border-color: #3c3c3c; /* Borde oscuro del panel */
-    --summary-item-background: #252526; /* Fondo oscuro del ítem del resumen */
-    --summary-item-hover: #333333; /* Fondo oscuro del ítem del resumen al pasar el ratón */
-    --summary-item-text: #d4d4d4; /* Texto claro del ítem del resumen */
+    --background-color: #1a1a1a; /* Fondo oscuro */
+    --text-color: #e0e0e0; /* Texto claro */
+    --panel-background-color: #2d2d2d; /* Fondo oscuro del panel */
+    --panel-border-color: #404040; /* Borde oscuro del panel */
+    --summary-item-background: #2d2d2d; /* Fondo oscuro del ítem del resumen */
+    --summary-item-hover: #3a3a3a; /* Fondo oscuro del ítem del resumen al pasar el ratón */
+    --summary-item-text: #e0e0e0; /* Texto claro del ítem del resumen */
+    
+    /* Variables para botones de respuesta en modo oscuro */
+    --answer-button-bg: #3a3a3a;
+    --answer-button-text: #e0e0e0;
+    --answer-button-border: #555555;
+    --answer-button-hover-bg: #424242;
+    --answer-button-hover-border: #64b5f6;
+    --answer-button-selected-bg: #1e3a8a;
+    --answer-button-selected-text: #bfdbfe;
+    --answer-button-selected-border: #3b82f6;
+    --answer-button-selected-glow: rgba(59, 130, 246, 0.4);
+    
+    /* Variables para respuestas correctas e incorrectas en modo oscuro */
+    --correct-answer-bg: #1b5e20;
+    --correct-answer-text: #a5d6a7;
+    --correct-answer-border: #4caf50;
+    --correct-answer-glow: rgba(76, 175, 80, 0.4);
+    --incorrect-answer-bg: #b71c1c;
+    --incorrect-answer-text: #ffcdd2;
+    --incorrect-answer-border: #f44336;
 }
 
 /* Estilos del botón de cambio de modo */
@@ -71,23 +119,28 @@ body.dark-mode {
 .container {
     display: flex; /* Diseño de flexbox */
     background-color: var(--panel-background-color); /* Fondo del contenedor */
-    padding: 20px; /* Relleno dentro del contenedor */
+    padding: 15px; /* Relleno reducido */
     border-radius: 6px; /* Esquinas redondeadas */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.12); /* Efecto de sombra */
-    width: 95%; /* Ancho casi completo */
-    height: 90%; /* Altura casi completa */
+    width: calc(100% - 30px); /* Ancho que respeta el padding del body */
+    max-width: calc(100vw - 30px); /* Ancho máximo para evitar overflow */
+    height: 95vh; /* Altura basada en viewport */
+    max-height: 95vh; /* Altura máxima del viewport */
     transition: background-color 0.3s, box-shadow 0.3s; /* Transición suave para el cambio de tema */
+    gap: 15px; /* Espacio entre elementos flex */
+    box-sizing: border-box; /* Incluir padding y border en el ancho */
+    overflow-x: hidden; /* Eliminar scroll horizontal */
 }
 
 /* Estilos del contenedor del cuestionario */
 #quiz-container {
     flex: 3; /* Ocupa 3 partes del espacio flex */
-    margin-right: 20px; /* Espacio a la derecha */
     display: flex; /* Diseño de flexbox */
     flex-direction: column; /* Diseño en columna */
     align-items: center; /* Centrar elementos horizontalmente */
     height: 100%; /* Altura completa */
     overflow-y: auto; /* Contenido desplazable */
+    min-height: 0; /* Permite que flex shrink funcione correctamente */
 }
 
 /* Estilos del encabezado */
@@ -115,38 +168,47 @@ body.dark-mode {
     flex-direction: column; /* Diseño en columna */
     justify-content: flex-start; /* Alinear elementos al inicio */
     align-items: center; /* Centrar elementos horizontalmente */
-    flex-grow: 1; /* Crecer para llenar el espacio */
+    flex: 1; /* Crecer para llenar el espacio disponible */
     width: 100%; /* Ancho completo */
     max-width: 100%; /* Ancho máximo */
-    overflow: hidden; /* Ocultar desbordamiento */
+    overflow-y: auto; /* Permitir scroll vertical si es necesario */
+    min-height: 0; /* Permite que flex shrink funcione */
 }
 
 /* Estilos del cuadro de la pregunta */
 #question-box {
     width: 100%; /* Ancho completo */
-    padding: 20px; /* Relleno dentro */
+    padding: 15px; /* Relleno reducido */
     background-color: var(--panel-background-color); /* Color de fondo */
     border: 1px solid var(--panel-border-color); /* Borde */
     border-radius: 6px; /* Esquinas redondeadas */
-    margin-bottom: 20px; /* Espacio debajo */
+    margin-bottom: 15px; /* Espacio debajo reducido */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* Efecto de sombra */
+    flex-shrink: 0; /* No permitir que se encoja */
 }
 
 /* Estilos del texto de la pregunta */
 #question {
-    font-size: 2em; /* Tamaño de fuente grande */
+    font-size: 1.3em; /* Tamaño de fuente reducido para ahorrar espacio */
     white-space: pre-wrap; /* Preservar espacios en blanco */
-    text-align: center; /* Centrar texto */
+    text-align: left; /* Alinear texto a la izquierda para mejor legibilidad */
+    line-height: 1.4; /* Espaciado entre líneas reducido */
+    font-weight: 500; /* Peso medio */
+    color: var(--text-color);
+    margin-bottom: 10px; /* Espacio debajo reducido */
 }
 
 /* Estilos del cuadro de respuestas */
 #answers-box {
     width: 100%; /* Ancho completo */
-    padding: 20px; /* Relleno dentro */
+    padding: 15px; /* Relleno reducido */
     background-color: var(--panel-background-color); /* Color de fondo */
     border: 1px solid var(--panel-border-color); /* Borde */
     border-radius: 6px; /* Esquinas redondeadas */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); /* Efecto de sombra */
+    flex: 1; /* Permitir que crezca */
+    overflow-y: auto; /* Permitir scroll si es necesario */
+    max-height: 60vh; /* Altura máxima para permitir scroll */
 }
 
 /* Estilos del contenedor de respuestas */
@@ -158,37 +220,68 @@ body.dark-mode {
 #answers button {
     display: block; /* Mostrar como bloque */
     width: 100%; /* Ancho completo */
-    margin: 10px 0; /* Margen vertical */
-    padding: 15px; /* Relleno dentro */
-    background-color: var(--primary-color); /* Color de fondo */
-    color: #ffffff; /* Color del texto */
-    border: none; /* Sin borde */
-    border-radius: 6px; /* Esquinas redondeadas */
+    margin: 8px 0; /* Margen vertical reducido */
+    padding: 15px; /* Relleno reducido para ahorrar espacio */
+    background-color: var(--answer-button-bg); /* Color de fondo suave */
+    color: var(--answer-button-text); /* Color del texto */
+    border: 2px solid var(--answer-button-border); /* Borde visible */
+    border-radius: 8px; /* Esquinas más redondeadas */
     cursor: pointer; /* Cursor de puntero al pasar el ratón */
-    font-size: 1.2em; /* Tamaño de fuente */
+    font-size: 1.1em; /* Tamaño de fuente ajustado */
+    font-weight: 500; /* Peso de fuente medio */
     white-space: pre-wrap; /* Preservar espacios en blanco */
-    transition: background-color 0.3s; /* Transición suave para el hover */
+    transition: all 0.3s ease; /* Transición suave para todos los cambios */
+    text-align: left; /* Alinear texto a la izquierda */
+    line-height: 1.3; /* Espaciado entre líneas reducido */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra suave */
+    min-height: 0; /* Permitir que el botón sea más pequeño si es necesario */
+    box-sizing: border-box; /* Incluir padding y border en el ancho */
+    overflow-wrap: break-word; /* Permitir que el texto se divida */
+    word-wrap: break-word; /* Compatibilidad con navegadores antiguos */
 }
 
 /* Efecto hover del botón de respuesta */
 #answers button:hover {
-    background-color: var(--primary-hover-color); /* Fondo al pasar el ratón */
+    background-color: var(--answer-button-hover-bg); /* Fondo al pasar el ratón */
+    border-color: var(--answer-button-hover-border); /* Color del borde al hover */
+    transform: translateY(-2px); /* Efecto de elevación */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Sombra más prominente */
 }
 
 /* Estilos del botón de respuesta seleccionado */
 #answers button.selected {
-    background-color: var(--secondary-color); /* Fondo seleccionado */
-    color: #ffffff; /* Color del texto seleccionado */
+    background-color: var(--answer-button-selected-bg); /* Fondo seleccionado */
+    color: var(--answer-button-selected-text); /* Color del texto seleccionado */
+    border-color: var(--answer-button-selected-border); /* Borde seleccionado */
+    box-shadow: 0 0 0 3px var(--answer-button-selected-glow); /* Brillo alrededor */
+    font-weight: 600; /* Texto más grueso cuando está seleccionado */
+}
+
+/* Estilos para respuestas correctas mostradas */
+#answers button.correct-answer {
+    background-color: var(--correct-answer-bg) !important;
+    color: var(--correct-answer-text) !important;
+    border-color: var(--correct-answer-border) !important;
+    box-shadow: 0 0 0 3px var(--correct-answer-glow) !important;
+    font-weight: 700 !important;
+}
+
+/* Estilos para respuestas incorrectas */
+#answers button.incorrect-answer {
+    background-color: var(--incorrect-answer-bg) !important;
+    color: var(--incorrect-answer-text) !important;
+    border-color: var(--incorrect-answer-border) !important;
+    opacity: 0.7;
 }
 
 /* Estilos del campo de texto */
 #answers input[type="text"] {
     width: 100%; /* Ancho completo */
-    padding: 15px; /* Relleno dentro */
-    margin: 10px 0; /* Margen vertical */
+    padding: 12px; /* Relleno reducido */
+    margin: 8px 0; /* Margen vertical reducido */
     border: 1px solid var(--panel-border-color); /* Borde */
     border-radius: 6px; /* Esquinas redondeadas */
-    font-size: 1.2em; /* Tamaño de fuente */
+    font-size: 1.1em; /* Tamaño de fuente reducido */
     transition: border-color 0.3s; /* Transición suave para el enfoque */
     background-color: var(--panel-background-color); /* Color de fondo */
     color: var(--text-color); /* Color del texto */
@@ -200,22 +293,86 @@ body.dark-mode {
     outline: none; /* Sin contorno */
 }
 
-/* Estilos del botón siguiente */
-#next-button {
-    margin-top: 20px; /* Espacio arriba */
-    padding: 15px 30px; /* Relleno dentro */
-    background-color: var(--secondary-color); /* Color de fondo */
-    color: #ffffff; /* Color del texto */
-    border: none; /* Sin borde */
-    border-radius: 6px; /* Esquinas redondeadas */
-    cursor: pointer; /* Cursor de puntero al pasar el ratón */
-    font-size: 1.2em; /* Tamaño de fuente */
-    transition: background-color 0.3s; /* Transición suave para el hover */
+/* Estilos especiales para el botón de envío dentro del contenedor de respuestas */
+#answers button[onclick*="check"] {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    margin-top: 15px !important;
+    padding: 12px 20px !important;
+    border: none !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
 }
 
-/* Efecto hover del botón siguiente */
+/* Estilos del contenedor de botones de navegación */
+#navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+/* Estilos base para todos los botones de navegación */
+#navigation-buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 120px;
+    box-sizing: border-box;
+}
+
+/* Botón anterior */
+#prev-button {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+}
+
+#prev-button:hover {
+    background-color: var(--secondary-hover-color);
+}
+
+#prev-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Botón enviar */
+#submit-button {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+#submit-button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+/* Botón siguiente */
+#next-button {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+}
+
 #next-button:hover {
-    background-color: var(--secondary-hover-color); /* Fondo al pasar el ratón */
+    background-color: var(--secondary-hover-color);
+}
+
+#next-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
 /* Estilos del panel de resumen */
@@ -305,12 +462,15 @@ body.dark-mode {
 .modal-content {
     background-color: var(--panel-background-color); /* Color de fondo */
     margin: 15% auto; /* Centrado verticalmente */
-    padding: 20px; /* Relleno dentro */
-    border: 1px solid var(--panel-border-color); /* Borde */
+    padding: 30px; /* Relleno dentro aumentado */
+    border: 2px solid var(--panel-border-color); /* Borde */
     width: 80%; /* 80% de ancho */
-    max-width: 500px; /* Ancho máximo */
-    border-radius: 6px; /* Esquinas redondeadas */
+    max-width: 600px; /* Ancho máximo aumentado */
+    border-radius: 12px; /* Esquinas más redondeadas */
     text-align: center; /* Centrar texto */
+    font-size: 1.2em; /* Texto más grande */
+    line-height: 1.5; /* Mejor espaciado entre líneas */
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2); /* Sombra más prominente */
 }
 
 /* Estilos del botón de cierre */
@@ -331,4 +491,122 @@ body.dark-mode {
 #summary-list {
     max-height: 600px; /* Aumentar la altura según sea necesario */
     overflow-y: auto; /* Permitir el desplazamiento vertical */
+}
+
+/* Estilos del selector de conjunto de preguntas */
+#question-set-selector {
+    margin-bottom: 15px; /* Espacio debajo reducido */
+    text-align: center; /* Centrar texto */
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Añadir padding */
+    background-color: var(--panel-background-color);
+    border-radius: 6px;
+    border: 1px solid var(--panel-border-color);
+}
+
+#question-set-selector label {
+    display: block; /* Mostrar como bloque */
+    margin-bottom: 8px; /* Espacio debajo reducido */
+    font-size: 1.1em; /* Tamaño de fuente reducido */
+    font-weight: 600; /* Texto en negrita */
+}
+
+#question-set-selector select {
+    padding: 10px; /* Relleno dentro */
+    margin: 0 10px; /* Margen horizontal */
+    border: 1px solid var(--panel-border-color); /* Borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    background-color: var(--panel-background-color); /* Color de fondo */
+    color: var(--text-color); /* Color del texto */
+    font-size: 1em; /* Tamaño de fuente */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    min-width: 300px; /* Ancho mínimo */
+}
+
+#question-set-selector button {
+    padding: 10px 20px; /* Relleno dentro */
+    background-color: var(--primary-color); /* Color de fondo */
+    color: #ffffff; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 6px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    font-size: 1em; /* Tamaño de fuente */
+    transition: background-color 0.3s; /* Transición suave para el hover */
+}
+
+#question-set-selector button:hover {
+    background-color: var(--primary-hover-color); /* Fondo al pasar el ratón */
+}
+
+#question-set-selector button:disabled {
+    background-color: #ccc; /* Color de fondo deshabilitado */
+    cursor: not-allowed; /* Cursor no permitido */
+}
+
+/* Media queries para mejor responsividad */
+@media (max-height: 800px) {
+    .container {
+        height: 98vh; /* Usar más altura en pantallas pequeñas */
+    }
+    
+    #question {
+        font-size: 1.2em; /* Reducir texto en pantallas pequeñas */
+        line-height: 1.3;
+        margin-bottom: 8px;
+    }
+    
+    #answers button {
+        padding: 12px; /* Reducir padding en pantallas pequeñas */
+        margin: 6px 0;
+        font-size: 1em;
+        line-height: 1.2;
+    }
+    
+    #question-box, #answers-box {
+        padding: 12px; /* Reducir padding */
+    }
+    
+    #answers-box {
+        max-height: 55vh; /* Reducir altura máxima */
+    }
+}
+
+@media (max-height: 700px) {
+    #question {
+        font-size: 1.1em; /* Texto aún más pequeño */
+        line-height: 1.2;
+    }
+    
+    #answers button {
+        padding: 10px;
+        margin: 4px 0;
+        font-size: 0.95em;
+    }
+    
+    #answers-box {
+        max-height: 50vh;
+    }
+    
+    #question-box, #answers-box {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Cambiar a columna en pantallas pequeñas */
+        width: 99%;
+        padding: 10px;
+    }
+    
+    #quiz-container {
+        flex: none;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    #summary-panel {
+        flex: none;
+        height: 200px; /* Altura fija para el panel de resumen */
+    }
 }

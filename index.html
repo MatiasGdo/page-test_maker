@@ -15,6 +15,13 @@
         <div id="quiz-container">
             <div id="header">
                 <h1>Estudio de Exámenes Tipo Test</h1>
+                <div id="question-set-selector">
+                    <label for="question-set">Selecciona el conjunto de preguntas:</label>
+                    <select id="question-set">
+                        <!-- Las opciones se generarán dinámicamente -->
+                    </select>
+                    <button id="load-questions">Cargar Preguntas</button>
+                </div>
                 <div id="question-number"></div>
             </div>
             <div id="question-container">
@@ -25,7 +32,11 @@
                     <div id="answers"></div>
                 </div>
             </div>
-            <button id="next-button">Siguiente</button>
+            <div id="navigation-buttons">
+                <button id="prev-button">⬅️ Anterior Pregunta</button>
+                <button id="submit-button">✉️ Enviar</button>
+                <button id="next-button">Siguiente Pregunta ➡️</button>
+            </div>
         </div>
         <div id="summary-panel">
             <h2>Resumen</h2>
