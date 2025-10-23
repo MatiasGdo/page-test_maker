@@ -21,6 +21,7 @@
                         <!-- Las opciones se generarán dinámicamente -->
                     </select>
                     <button id="load-questions">Cargar Preguntas</button>
+                    <button id="tutorial-btn" title="Cómo crear archivos de preguntas">❓ Tutorial</button>
                 </div>
                 <div id="question-number"></div>
             </div>
@@ -53,6 +54,81 @@
             <p id="modal-message"></p>
         </div>
     </div>
+
+    <!-- Modal del Tutorial -->
+    <div id="tutorial-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="tutorial-close">&times;</span>
+            <h2>📚 Cómo Crear Archivos de Preguntas</h2>
+            
+            <div class="tutorial-section">
+                <h3>🗂️ Ubicación</h3>
+                <p>Crea archivos JavaScript en el directorio <code>questions/</code></p>
+                <p><strong>Formato del nombre:</strong> <code>questions_[TEMA].js</code></p>
+            </div>
+
+            <div class="tutorial-section">
+                <h3>📝 Estructura Básica</h3>
+                <pre><code>// Array de preguntas para el cuestionario
+const questions_mi_tema = [
+    {
+        question: "Tu pregunta aquí",
+        type: "opcion", // "opcion", "varias" o "escribir"
+        answers: ["A. Opción 1", "B. Opción 2", "C. Opción 3"],
+        correct: 0 // índice de respuesta correcta
+    }
+];</code></pre>
+            </div>
+
+            <div class="tutorial-section">
+                <h3>🎯 Tipos de Pregunta</h3>
+                
+                <h4>1. Opción Única (<code>type: "opcion"</code>)</h4>
+                <pre><code>{
+    question: "¿Cuál es la capital de España?",
+    type: "opcion", 
+    answers: ["A. Madrid", "B. Barcelona"],
+    correct: 0 // Madrid (índice 0)
+}</code></pre>
+
+                <h4>2. Múltiples Opciones (<code>type: "varias"</code>)</h4>
+                <pre><code>{
+    question: "¿Cuáles son lenguajes de programación?",
+    type: "varias",
+    answers: ["A. JavaScript", "B. HTML", "C. Python"],
+    correct: [0, 2] // JavaScript y Python
+}</code></pre>
+
+                <h4>3. Respuesta Escrita (<code>type: "escribir"</code>)</h4>
+                <pre><code>{
+    question: "Comando para listar archivos en Linux:",
+    type: "escribir",
+    correct: "ls" // respuesta exacta
+}</code></pre>
+            </div>
+
+            <div class="tutorial-section">
+                <h3>⚠️ Consejos Importantes</h3>
+                <ul>
+                    <li>✅ El nombre de la variable debe coincidir con el archivo</li>
+                    <li>✅ Usa comillas dobles para las cadenas</li>
+                    <li>✅ Los índices de array empiezan en 0</li>
+                    <li>✅ Escapa caracteres especiales: <code>\"</code></li>
+                    <li>✅ Actualiza <code>script.js</code> para incluir tu archivo</li>
+                </ul>
+            </div>
+
+            <div class="tutorial-section">
+                <h3>🔧 Último Paso</h3>
+                <p>Añade tu archivo a la lista en <code>script.js</code>:</p>
+                <pre><code>const allFiles = [
+    // ... otros archivos
+    'questions/questions_mi_tema.js'
+];</code></pre>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

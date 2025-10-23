@@ -4,54 +4,46 @@ async function detectQuestionFiles() {
     
     console.log('🔍 Detectando archivos automáticamente...');
     
-    // Lista optimizada: SOLO los archivos que realmente existen (carga rápida)
-    const allFiles = [
-        'questions_LPIC_306.js',
-        'questions_LPIC_test.js',
-        'questions_devops_part1.js',
-        'questions_devops_part2.js',
-        'questions_devops_part3.js',
-        'questions_devops_part4.js',
-        'questions_docker_part1.js',
-        'questions_aws_part1.js'
-    ];
-    
-    console.log(`🔍 Verificando ${allFiles.length} archivos conocidos (carga rápida)...`);
-    
-    // Verificar qué archivos existen haciendo peticiones HEAD
-    let foundCount = 0;
-    for (const fileName of allFiles) {
-        try {
-            const response = await fetch(fileName, {
-                method: 'HEAD'
-            });
-            
-            if (response.ok) {
-                foundCount++;
-                // Extraer el nombre del archivo después de "questions_" y antes de ".js"
-                const nameMatch = fileName.match(/^questions_(.+)\.js$/);
-                if (nameMatch) {
-                    const baseName = nameMatch[1];
-                    // Formatear el nombre: reemplazar guiones bajos con espacios y hacer título
-                    const formattedName = baseName
-                        .replace(/_/g, ' ')
-                        .replace(/\b\w/g, letter => letter.toUpperCase());
-                    
-                    questionSets[fileName] = {
-                        name: formattedName,
-                        questions: null
-                    };
-                    
-                    console.log(`✅ Encontrado: ${fileName} -> "${formattedName}"`);
+    // Intentar listar directorio questions/
+    try {
+        const dirResponse = await fetch('questions/');
+        if (dirResponse.ok) {
+            const dirHtml = await dirResponse.text();
+            // Buscar archivos .js que empiecen con "questions_"
+            const fileMatches = dirHtml.match(/href="questions_[^"]*\.js"/g);
+            if (fileMatches) {
+                const foundFiles = fileMatches.map(match => 
+                    'questions/' + match.match(/questions_[^"]*\.js/)[0]
+                );
+                
+                // Procesar archivos encontrados
+                for (const fileName of foundFiles) {
+                    const nameMatch = fileName.match(/questions\/questions_(.+)\.js$/);
+                    if (nameMatch) {
+                        const baseName = nameMatch[1];
+                        const formattedName = baseName
+                            .replace(/_/g, ' ')
+                            .replace(/\b\w/g, letter => letter.toUpperCase());
+                        
+                        questionSets[fileName] = {
+                            name: formattedName,
+                            questions: null
+                        };
+                        
+                        console.log(`✅ Encontrado: ${fileName} -> "${formattedName}"`);
+                    }
                 }
+                
+                console.log(`🎯 Total: ${Object.keys(questionSets).length} archivos detectados`);
+                return questionSets;
             }
-        } catch (error) {
-            // Archivo no existe o no es accesible, continuar con el siguiente
-            continue;
         }
+    } catch (error) {
+        console.log('⚠️ No se puede listar el directorio automáticamente');
     }
     
-    console.log(`🎯 Total archivos detectados: ${foundCount} de ${allFiles.length} probados`);
+    console.log('💡 No se pudieron detectar archivos automáticamente. Añade manualmente los nombres a la lista en el código.')
+    
     return questionSets;
 }
 
@@ -578,4 +570,31 @@ async function populateQuestionSetSelector() {
 // Inicializar la aplicación cuando se carga la página
 document.addEventListener('DOMContentLoaded', async () => {
     await populateQuestionSetSelector();
+    
+    // Configurar el tutorial
+    setupTutorial();
 });
+
+// Función para configurar el tutorial
+function setupTutorial() {
+    const tutorialBtn = document.getElementById('tutorial-btn');
+    const tutorialModal = document.getElementById('tutorial-modal');
+    const tutorialClose = document.getElementById('tutorial-close');
+    
+    // Abrir tutorial
+    tutorialBtn.addEventListener('click', function() {
+        tutorialModal.style.display = 'block';
+    });
+    
+    // Cerrar tutorial
+    tutorialClose.addEventListener('click', function() {
+        tutorialModal.style.display = 'none';
+    });
+    
+    // Cerrar tutorial al hacer clic fuera del modal
+    window.addEventListener('click', function(event) {
+        if (event.target === tutorialModal) {
+            tutorialModal.style.display = 'none';
+        }
+    });
+}
