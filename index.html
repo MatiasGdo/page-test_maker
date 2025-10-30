@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estudio de Exámenes</title>
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- CSS Modular -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
     <div class="mode-switcher">
@@ -17,11 +24,11 @@
                 <h1>Estudio de Exámenes Tipo Test</h1>
                 <div id="question-set-selector">
                     <label for="question-set">Selecciona el conjunto de preguntas:</label>
-                    <select id="question-set">
-                        <!-- Las opciones se generarán dinámicamente -->
-                    </select>
-                    <button id="load-questions">Cargar Preguntas</button>
-                    <button id="tutorial-btn" title="Cómo crear archivos de preguntas">❓ Tutorial</button>
+                    <div class="selector-controls">
+                        <select id="question-set"></select>
+                        <button id="load-questions">Cargar Preguntas</button>
+                        <button id="tutorial-btn">Tutorial</button>
+                    </div>
                 </div>
                 <div id="question-number"></div>
             </div>

@@ -1,61 +1,10 @@
-// Función para detectar automáticamente archivos de preguntas
-async function detectQuestionFiles() {
-    const questionSets = {};
-    
-    console.log('🔍 Detectando archivos automáticamente...');
-    
-    // Intentar listar directorio questions/
-    try {
-        const dirResponse = await fetch('questions/');
-        if (dirResponse.ok) {
-            const dirHtml = await dirResponse.text();
-            // Buscar archivos .js que empiecen con "questions_"
-            const fileMatches = dirHtml.match(/href="questions_[^"]*\.js"/g);
-            if (fileMatches) {
-                const foundFiles = fileMatches.map(match => 
-                    'questions/' + match.match(/questions_[^"]*\.js/)[0]
-                );
-                
-                // Procesar archivos encontrados
-                for (const fileName of foundFiles) {
-                    const nameMatch = fileName.match(/questions\/questions_(.+)\.js$/);
-                    if (nameMatch) {
-                        const baseName = nameMatch[1];
-                        const formattedName = baseName
-                            .replace(/_/g, ' ')
-                            .replace(/\b\w/g, letter => letter.toUpperCase());
-                        
-                        questionSets[fileName] = {
-                            name: formattedName,
-                            questions: null
-                        };
-                        
-                        console.log(`✅ Encontrado: ${fileName} -> "${formattedName}"`);
-                    }
-                }
-                
-                console.log(`🎯 Total: ${Object.keys(questionSets).length} archivos detectados`);
-                return questionSets;
-            }
-        }
-    } catch (error) {
-        console.log('⚠️ No se puede listar el directorio automáticamente');
-    }
-    
-    console.log('💡 No se pudieron detectar archivos automáticamente. Añade manualmente los nombres a la lista en el código.')
-    
-    return questionSets;
-}
-
-// Variable global para almacenar los conjuntos de preguntas detectados
-let questionSets = {};
-
 // Variables globales
-let currentQuestionIndex = 0; // Índice de la pregunta actual
-let shuffledQuestions = []; // Array para almacenar preguntas mezcladas
-let summary = []; // Array para almacenar el resumen de respuestas
-let selectedAnswers = []; // Array para almacenar respuestas seleccionadas
-let questions = []; // Array para almacenar las preguntas actuales
+let questionSets = {};
+let currentQuestionIndex = 0;
+let shuffledQuestions = [];
+let summary = [];
+let selectedAnswers = [];
+let questions = [];
 
 // Función para mezclar un array (algoritmo Fisher-Yates)
 function shuffle(array) {
@@ -65,400 +14,379 @@ function shuffle(array) {
     }
 }
 
-// Función para cargar un conjunto de preguntas (SOLUCIÓN FINAL)
+// Función para detectar automáticamente archivos de preguntas
+async function detectQuestionFiles() {
+    const detectedSets = {};
+    const seenFiles = new Set();
+    
+    try {
+        const dirResponse = await fetch('questions/');
+        if (dirResponse.ok) {
+            const dirHtml = await dirResponse.text();
+            const fileMatches = dirHtml.match(/href="questions_[^"]*\.js"/g);
+            
+            if (fileMatches) {
+                const uniqueFiles = [...new Set(fileMatches.map(match => 
+                    match.match(/questions_[^"]*\.js/)[0]
+                ))];
+                
+                for (const fileName of uniqueFiles) {
+                    const fullPath = 'questions/' + fileName;
+                    
+                    if (seenFiles.has(fullPath)) continue;
+                    seenFiles.add(fullPath);
+                    
+                    const nameMatch = fileName.match(/questions_(.+)\.js$/);
+                    if (nameMatch) {
+                        const baseName = nameMatch[1];
+                        const formattedName = baseName
+                            .replace(/_/g, ' ')
+                            .replace(/\b\w/g, letter => letter.toUpperCase());
+                        
+                        detectedSets[fullPath] = {
+                            name: formattedName,
+                            questions: null
+                        };
+                        
+                        console.log(`✅ Encontrado: ${fullPath} -> "${formattedName}"`);
+                    }
+                }
+                
+                console.log(`🎯 Total: ${Object.keys(detectedSets).length} archivos únicos detectados`);
+            }
+        }
+    } catch (error) {
+        console.log('⚠️ No se pudo listar el directorio automáticamente');
+    }
+    
+    return detectedSets;
+}
+
+// Función para poblar el selector con los conjuntos de preguntas detectados
+async function populateQuestionSetSelector() {
+    const selector = document.getElementById('question-set');
+    selector.innerHTML = '<option value="">-- Selecciona un conjunto --</option>';
+    
+    questionSets = await detectQuestionFiles();
+    
+    for (const [fileName, data] of Object.entries(questionSets)) {
+        const option = document.createElement('option');
+        option.value = fileName;
+        option.textContent = data.name;
+        selector.appendChild(option);
+    }
+    
+    console.log(`📋 ${Object.keys(questionSets).length} conjuntos añadidos al selector`);
+}
+
+// Función para cargar un conjunto de preguntas
 async function loadQuestionSet(fileName) {
     try {
-        console.log(`🔄 Intentando cargar: ${fileName}`);
+        console.log(`🔄 Cargando: ${fileName}`);
         
         if (questionSets[fileName]?.questions) {
-            // Las preguntas ya están cargadas
             questions = questionSets[fileName].questions;
-            console.log(`✅ Preguntas ya cargadas: ${questions.length} preguntas`);
+            console.log(`✅ Preguntas ya cargadas: ${questions.length}`);
         } else {
-            // Cargar las preguntas desde el archivo
-            const response = await fetch(fileName);
+            // Añadir timestamp para evitar caché
+            const cacheBuster = `?t=${Date.now()}`;
+            const response = await fetch(fileName + cacheBuster);
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: No se pudo cargar el archivo ${fileName}`);
+                throw new Error(`HTTP ${response.status}`);
             }
             
             const scriptText = await response.text();
-            console.log(`📄 Archivo cargado: ${fileName}, tamaño: ${scriptText.length} caracteres`);
             
-            // SOLUCIÓN: Parsear el contenido como datos JSON-like en lugar de ejecutar como script
-            // Extraer la parte del array usando regex (más flexible)
-            console.log(`🔍 Buscando array en ${fileName}...`);
             let arrayMatch = scriptText.match(/const\s+questions_[a-zA-Z0-9_]+\s*=\s*(\[[\s\S]*\]);/);
-            
-            // Si no encuentra el patrón específico, intentar con el patrón genérico
             if (!arrayMatch) {
-                console.log(`⚠️ Patrón específico no encontrado, intentando patrón genérico...`);
                 arrayMatch = scriptText.match(/const\s+questions\s*=\s*(\[[\s\S]*\]);/);
             }
             
             if (!arrayMatch) {
-                console.error(`❌ No se encontró ningún patrón de array en ${fileName}`);
-                console.log(`Primeros 500 caracteres del archivo:`, scriptText.substring(0, 500));
-                console.log(`Últimos 200 caracteres del archivo:`, scriptText.substring(scriptText.length - 200));
-                throw new Error(`No se pudo extraer el array de preguntas de ${fileName}`);
+                throw new Error(`No se pudo extraer el array de preguntas`);
             }
-            
-            console.log(`✅ Patrón encontrado en ${fileName}`);
-            
-            
             
             const arrayContent = arrayMatch[1];
-            console.log(`🎯 Array extraído de ${fileName}, tamaño: ${arrayContent.length} caracteres`);
             
-            // Parsear el array usando diferentes estrategias según el tamaño
-            console.log(`⚙️ Parseando array de ${fileName}...`);
-            
-            // Para archivos grandes, usar una estrategia más robusta
-            if (arrayContent.length > 25000) {
-                console.log(`📊 Archivo grande detectado (${arrayContent.length} chars), usando Function constructor...`);
-                
-                // DIAGNÓSTICO ESPECIAL para LPIC_306
-                if (fileName.includes('LPIC_306')) {
-                    console.log(`🔍 DIAGNÓSTICO ESPECIAL para ${fileName}:`);
-                    console.log(`- Tamaño total del archivo: ${scriptText.length} caracteres`);
-                    console.log(`- Tamaño del array extraído: ${arrayContent.length} caracteres`);
-                    console.log(`- Primeros 100 chars del array:`, arrayContent.substring(0, 100));
-                    console.log(`- Últimos 100 chars del array:`, arrayContent.substring(arrayContent.length - 100));
-                    
-                    // Verificar si hay caracteres problemáticos
-                    const hasQuotes = arrayContent.includes('"');
-                    const hasSingleQuotes = arrayContent.includes("'");
-                    const hasBackslashes = arrayContent.includes('\\');
-                    const hasNewlines = arrayContent.includes('\n');
-                    
-                    console.log(`- Contiene comillas dobles: ${hasQuotes}`);
-                    console.log(`- Contiene comillas simples: ${hasSingleQuotes}`);
-                    console.log(`- Contiene backslashes: ${hasBackslashes}`);
-                    console.log(`- Contiene saltos de línea: ${hasNewlines}`);
-                }
-                
-                try {
-                    // Crear una función que ejecute el parsing en un contexto limpio
-                    const func = new Function('return ' + arrayContent);
-                    questions = func();
-                    console.log(`✅ Array parseado con Function constructor: ${questions.length} preguntas`);
-                } catch (funcError) {
-                    console.log(`⚠️ Function constructor falló para ${fileName}`);
-                    console.error('Error Function detallado:', funcError.name, funcError.message);
-                    console.log('Stack trace:', funcError.stack);
-                    
-                    // Intentar parsing por chunks
-                    console.log(`🔧 Intentando parsing por chunks...`);
-                    try {
-                        // Dividir en chunks más pequeños y validar cada uno
-                        const chunkSize = 10000;
-                        let validArray = true;
-                        
-                        for (let i = 0; i < arrayContent.length; i += chunkSize) {
-                            const chunk = arrayContent.substring(i, i + chunkSize);
-                            console.log(`Validando chunk ${Math.floor(i/chunkSize) + 1}, posición ${i}-${i + chunkSize}`);
-                        }
-                        
-                        // Si llegamos aquí, intentar eval
-                        questions = eval(`(${arrayContent})`);
-                        console.log(`✅ Array parseado con eval después de validación: ${questions.length} preguntas`);
-                    } catch (evalError) {
-                        console.error(`❌ Ambos métodos fallaron para ${fileName}:`);
-                        console.error('Error eval:', evalError.name, evalError.message);
-                        console.log(`Primeros 300 caracteres del array:`, arrayContent.substring(0, 300));
-                        throw new Error(`Error parseando preguntas en ${fileName}: ${evalError.message}`);
-                    }
-                }
-            } else {
-                console.log(`📄 Archivo pequeño, usando JSON.parse primero...`);
-                try {
-                    // Para archivos pequeños, usar JSON.parse primero
-                    questions = JSON.parse(arrayContent);
-                    console.log(`✅ Array parseado con JSON.parse: ${questions.length} preguntas`);
-                } catch (jsonError) {
-                    console.log(`⚠️ JSON.parse falló, intentando con eval...`);
-                    try {
-                        questions = eval(`(${arrayContent})`);
-                        console.log(`✅ Array parseado con eval: ${questions.length} preguntas`);
-                    } catch (evalError) {
-                        console.error(`❌ Error parseando el array de ${fileName}:`, evalError);
-                        console.log(`Primeros 200 caracteres del array:`, arrayContent.substring(0, 200));
-                        throw new Error(`Error parseando preguntas en ${fileName}: ${evalError.message}`);
-                    }
-                }
+            try {
+                questions = JSON.parse(arrayContent);
+            } catch (jsonError) {
+                questions = eval(`(${arrayContent})`);
             }
             
-            if (!questions || !Array.isArray(questions)) {
-                throw new Error(`El contenido parseado no es un array válido`);
+            if (!Array.isArray(questions)) {
+                throw new Error(`El contenido no es un array válido`);
             }
             
-            // Guardar en cache
             if (!questionSets[fileName]) {
                 questionSets[fileName] = { name: fileName, questions: null };
             }
             questionSets[fileName].questions = questions;
             
-            console.log(`✅ Cargadas ${questions.length} preguntas directamente del array`);
+            console.log(`✅ Cargadas ${questions.length} preguntas desde ${fileName}`);
         }
         
-        // Inicializar el cuestionario con las nuevas preguntas
         initializeQuiz();
         
     } catch (error) {
-        console.error('Error cargando el conjunto de preguntas:', error);
-        showModal('Error cargando las preguntas: ' + error.message);
+        console.error('Error cargando preguntas:', error);
+        const loadBtn = document.getElementById('load-questions');
+        loadBtn.style.animation = 'shake 0.2s';
+        loadBtn.style.background = 'var(--error-color)';
+        setTimeout(() => {
+            loadBtn.style.animation = '';
+            loadBtn.style.background = '';
+        }, 2000);
     }
 }
 
 // Función para inicializar el cuestionario
 function initializeQuiz() {
     if (!questions || questions.length === 0) {
-        showModal('No hay preguntas disponibles');
+        const questionBox = document.getElementById('question-box');
+        questionBox.innerHTML = '<p style="color: var(--error-color); font-weight: 600;">No hay preguntas disponibles</p>';
         return;
     }
     
-    shuffledQuestions = [...questions]; // Copiar preguntas a shuffledQuestions
-    shuffle(shuffledQuestions); // Mezclar las preguntas
-    summary = shuffledQuestions.map(() => ({ answered: false, correct: false, partiallyCorrect: false })); // Inicializar resumen
-    currentQuestionIndex = 0; // Reiniciar el índice de la pregunta actual
-    selectedAnswers = []; // Reiniciar respuestas seleccionadas
-    updateSummaryPanel(); // Actualizar el panel de resumen
-    showQuestion(); // Mostrar la primera pregunta
+    shuffledQuestions = [...questions];
+    shuffle(shuffledQuestions);
+    summary = shuffledQuestions.map(() => ({ answered: false, correct: false, partiallyCorrect: false }));
+    currentQuestionIndex = 0;
+    selectedAnswers = [];
+    updateSummaryPanel();
+    showQuestion();
+}
+
+// Función para reiniciar el cuestionario
+function restartQuiz() {
+    if (questions && questions.length > 0) {
+        initializeQuiz();
+    }
 }
 
 // Función para mostrar la pregunta actual
 function showQuestion() {
-    const questionNumberElement = document.getElementById('question-number'); // Obtener el elemento del número de pregunta
-    const questionElement = document.getElementById('question'); // Obtener el elemento de la pregunta
-    const answersElement = document.getElementById('answers'); // Obtener el elemento de respuestas
-    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
+    const questionNumberElement = document.getElementById('question-number');
+    const questionElement = document.getElementById('question');
+    const answersElement = document.getElementById('answers');
+    const question = shuffledQuestions[currentQuestionIndex];
 
     if (!question) {
         console.error('Pregunta no encontrada en el índice', currentQuestionIndex);
         return;
     }
 
-    questionNumberElement.textContent = `Pregunta ${currentQuestionIndex + 1}`; // Mostrar el número de pregunta
-    questionElement.textContent = question.question; // Mostrar el texto de la pregunta
-    answersElement.innerHTML = ''; // Limpiar respuestas anteriores
-    selectedAnswers = []; // Reiniciar respuestas seleccionadas
+    questionNumberElement.textContent = `Pregunta ${currentQuestionIndex + 1}`;
+    questionElement.textContent = question.question;
+    answersElement.innerHTML = '';
+    selectedAnswers = [];
 
-    // Normalizar tipos de pregunta
     const questionType = question.type || 'opcion';
     const normalizedType = questionType === 'escribir' ? 'written' : 
                           questionType === 'varias' ? 'multiple' : 
                           questionType === 'opcion' ? 'single' : questionType;
 
     if (normalizedType === "written") {
-        const input = document.createElement('input'); // Crear un elemento de entrada para respuestas escritas
-        input.type = 'text'; // Establecer el tipo de entrada a texto
-        input.id = 'written-answer'; // Establecer el id de la entrada
-        input.placeholder = 'Escribe tu respuesta aquí'; // Establecer el texto del marcador de posición
-        answersElement.appendChild(input); // Agregar la entrada al elemento de respuestas
+        // Crear contenedor para el input
+        const inputContainer = document.createElement('div');
+        inputContainer.style.width = '100%';
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'written-answer';
+        input.placeholder = '✍️ Escribe tu respuesta aquí...';
+        input.autocomplete = 'off';
+        
+        // Permitir enviar con Enter
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitCurrentAnswer();
+            }
+        });
+        
+        inputContainer.appendChild(input);
+        answersElement.appendChild(inputContainer);
+        
+        // Auto-focus en el input
+        setTimeout(() => input.focus(), 100);
     } else if (question.answers && Array.isArray(question.answers)) {
         const shuffledAnswers = question.answers.map((answer, index) => ({ answer, index }));
-        shuffle(shuffledAnswers); // Mezclar las respuestas
+        shuffle(shuffledAnswers);
 
         shuffledAnswers.forEach(({ answer, index }) => {
-            const button = document.createElement('button'); // Crear un botón para cada respuesta
-            button.textContent = answer.slice(3); // Establecer el texto del botón sin la letra
-            button.onclick = () => toggleAnswer(index); // Establecer el controlador de clic del botón
-            button.dataset.index = index; // Establecer el índice de la respuesta en el botón
-            answersElement.appendChild(button); // Agregar el botón al elemento de respuestas
+            const button = document.createElement('button');
+            button.textContent = answer.slice(3);
+            button.onclick = () => toggleAnswer(index);
+            button.dataset.index = index;
+            button.classList.add('answer-btn');
+            answersElement.appendChild(button);
         });
-    } else {
-        console.error('Pregunta sin respuestas válidas:', question);
-        answersElement.innerHTML = '<p>Error: Esta pregunta no tiene respuestas válidas</p>';
     }
 
-    // Actualizar la navegación
     updateNavigationButtons();
 }
 
 // Función para alternar la selección de una respuesta
 function toggleAnswer(index) {
-    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
+    const question = shuffledQuestions[currentQuestionIndex];
     if (Array.isArray(question.correct)) {
         if (selectedAnswers.includes(index)) {
-            selectedAnswers = selectedAnswers.filter(i => i !== index); // Deseleccionar respuesta
+            selectedAnswers = selectedAnswers.filter(i => i !== index);
         } else {
-            selectedAnswers.push(index); // Seleccionar respuesta
+            selectedAnswers.push(index);
         }
     } else {
-        selectedAnswers = [index]; // Seleccionar respuesta única
+        selectedAnswers = [index];
     }
-    const buttons = document.querySelectorAll('#answers button'); // Obtener todos los botones de respuesta
+    const buttons = document.querySelectorAll('#answers button');
     buttons.forEach((button) => {
         if (parseInt(button.dataset.index) === index) {
-            button.classList.toggle('selected'); // Alternar la clase selected
+            button.classList.toggle('selected');
         } else if (!Array.isArray(question.correct)) {
-            button.classList.remove('selected'); // Deseleccionar otros botones si es de opción única
+            button.classList.remove('selected');
         }
-    });
-}
-
-// Función para resaltar las respuestas
-function highlightAnswers(correctIndex, selectedIndex) {
-    const buttons = document.querySelectorAll('#answers button'); // Obtener todos los botones de respuesta
-    buttons.forEach((button) => {
-        const buttonIndex = parseInt(button.dataset.index); // Obtener el índice del botón
-        if (buttonIndex === correctIndex) {
-            button.style.backgroundColor = '#4CAF50'; // Respuesta correcta en verde
-            button.style.color = '#fff';
-        } else if (buttonIndex === selectedIndex) {
-            button.style.backgroundColor = '#F44336'; // Respuesta seleccionada incorrecta en rojo
-            button.style.color = '#fff';
-        }
-        button.style.pointerEvents = 'none'; // Deshabilitar clics
-    });
-}
-
-// Función para resaltar múltiples respuestas
-function highlightMultipleAnswers(correctAnswers, selectedAnswers) {
-    const buttons = document.querySelectorAll('#answers button'); // Obtener todos los botones de respuesta
-    buttons.forEach((button) => {
-        const buttonIndex = parseInt(button.dataset.index); // Obtener el índice del botón
-        if (correctAnswers.includes(buttonIndex)) {
-            button.style.backgroundColor = '#4CAF50'; // Respuesta correcta en verde
-            button.style.color = '#fff';
-        } else if (selectedAnswers.includes(buttonIndex)) {
-            button.style.backgroundColor = '#F44336'; // Respuesta seleccionada incorrecta en rojo
-            button.style.color = '#fff';
-        }
-        button.style.pointerEvents = 'none'; // Deshabilitar clics
     });
 }
 
 // Función para verificar una respuesta de opción única
 function checkSingleChoiceAnswer() {
-    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
-    const selectedIndex = selectedAnswers[0]; // Obtener el índice de la respuesta seleccionada
-    const correctAnswer = question.answers[question.correct]; // Obtener el texto de la respuesta correcta
+    const question = shuffledQuestions[currentQuestionIndex];
+    const selectedIndex = selectedAnswers[0];
     
-    // Destacar visualmente las respuestas
-    highlightAnswers(question.correct, selectedIndex);
+    const buttons = document.querySelectorAll('#answers button');
+    buttons.forEach((button) => {
+        const buttonIndex = parseInt(button.dataset.index);
+        button.disabled = true;
+        
+        if (buttonIndex === question.correct) {
+            button.classList.add('correct');
+        } else if (buttonIndex === selectedIndex) {
+            button.classList.add('incorrect');
+        }
+    });
     
     if (selectedIndex === question.correct) {
-        showModal('¡Correcto!'); // Mostrar mensaje de correcto
-        summary[currentQuestionIndex].correct = true; // Marcar la pregunta como correcta en el resumen
-    } else {
-        showModal('Incorrecto. La respuesta correcta es: ' + correctAnswer.slice(3)); // Mostrar mensaje de incorrecto con la respuesta correcta
+        summary[currentQuestionIndex].correct = true;
     }
-    summary[currentQuestionIndex].answered = true; // Marcar la pregunta como respondida en el resumen
+    summary[currentQuestionIndex].answered = true;
+    updateSummaryPanel();
     
-    summary[currentQuestionIndex].answered = true; // Marcar la pregunta como respondida
-    updateSummaryPanel(); // Actualizar el panel de resumen
-    
-    // Mostrar feedback visual por un momento
     setTimeout(() => {
-        // No avanzar automáticamente, el usuario decidirá con los botones de navegación
-    }, 1500); // Reducido a 1.5 segundos solo para mostrar el feedback
+        document.getElementById('next-button').disabled = false;
+    }, 400);
 }
 
 // Función para verificar una respuesta de opción múltiple
 function checkMultipleChoiceAnswer() {
-    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
-    const correctAnswers = question.correct; // Obtener las respuestas correctas
-    const correctAnswerText = correctAnswers.map(index => question.answers[index].slice(3)).join(', '); // Obtener el texto de las respuestas correctas
-    const allCorrect = correctAnswers.every(index => selectedAnswers.includes(index)) && selectedAnswers.length === correctAnswers.length; // Verificar si todas las respuestas seleccionadas son correctas
-    const partiallyCorrect = selectedAnswers.some(index => correctAnswers.includes(index)) && !allCorrect; // Verificar si algunas respuestas seleccionadas son correctas
+    const question = shuffledQuestions[currentQuestionIndex];
+    const correctAnswers = question.correct;
+    const allCorrect = correctAnswers.every(index => selectedAnswers.includes(index)) && selectedAnswers.length === correctAnswers.length;
+    const partiallyCorrect = selectedAnswers.some(index => correctAnswers.includes(index)) && !allCorrect;
 
-    // Destacar visualmente las respuestas
-    highlightMultipleAnswers(correctAnswers, selectedAnswers);
+    const buttons = document.querySelectorAll('#answers button');
+    buttons.forEach((button) => {
+        const buttonIndex = parseInt(button.dataset.index);
+        button.disabled = true;
+        
+        if (correctAnswers.includes(buttonIndex)) {
+            button.classList.add('correct');
+        } else if (selectedAnswers.includes(buttonIndex)) {
+            button.classList.add('incorrect');
+        }
+    });
 
     if (allCorrect) {
-        showModal('¡Correcto!'); // Mostrar mensaje de correcto
-        summary[currentQuestionIndex].correct = true; // Marcar la pregunta como correcta en el resumen
+        summary[currentQuestionIndex].correct = true;
     } else if (partiallyCorrect) {
-        showModal('Parcialmente correcto. Las respuestas correctas son: ' + correctAnswerText); // Mostrar mensaje de parcialmente correcto con las respuestas correctas
-        summary[currentQuestionIndex].partiallyCorrect = true; // Marcar la pregunta como parcialmente correcta en el resumen
-    } else {
-        showModal('Incorrecto. Las respuestas correctas son: ' + correctAnswerText); // Mostrar mensaje de incorrecto con las respuestas correctas
+        summary[currentQuestionIndex].partiallyCorrect = true;
     }
-    summary[currentQuestionIndex].answered = true; // Marcar la pregunta como respondida en el resumen
-    updateSummaryPanel(); // Actualizar el panel de resumen
+    summary[currentQuestionIndex].answered = true;
+    updateSummaryPanel();
     
-    // Mostrar feedback visual por un momento
     setTimeout(() => {
-        // No avanzar automáticamente, el usuario decidirá con los botones de navegación
-    }, 1500); // Reducido a 1.5 segundos solo para mostrar el feedback
+        document.getElementById('next-button').disabled = false;
+    }, 400);
 }
 
 // Función para verificar una respuesta escrita
 function checkWrittenAnswer() {
-    const question = shuffledQuestions[currentQuestionIndex]; // Obtener la pregunta actual
-    const input = document.getElementById('written-answer'); // Obtener el elemento de entrada
-    const answer = input.value.trim().toLowerCase(); // Obtener la respuesta del usuario y convertir a minúsculas
-    const correctAnswer = question.correct.toLowerCase(); // Obtener la respuesta correcta en minúsculas
+    const question = shuffledQuestions[currentQuestionIndex];
+    const input = document.getElementById('written-answer');
+    
+    if (!input || !input.value.trim()) {
+        input.style.animation = 'shake 0.2s';
+        input.style.borderColor = 'var(--error-color)';
+        setTimeout(() => {
+            input.style.animation = '';
+            input.style.borderColor = '';
+        }, 200);
+        return;
+    }
+    
+    const answer = input.value.trim().toLowerCase();
+    const correctAnswer = question.correct.toLowerCase();
+
+    // Crear div de feedback con clase
+    const feedbackDiv = document.createElement('div');
+    feedbackDiv.className = 'feedback-message';
 
     if (answer === correctAnswer) {
-        showModal('¡Correcto!'); // Mostrar mensaje de correcto
-        summary[currentQuestionIndex].correct = true; // Marcar la pregunta como correcta en el resumen
-        input.style.backgroundColor = '#4CAF50'; // Cambiar el color de fondo a verde
-        input.style.color = '#fff';
+        summary[currentQuestionIndex].correct = true;
+        input.style.borderColor = 'var(--success-color)';
+        input.style.background = 'var(--success-bg)';
+        feedbackDiv.textContent = '✓ Correcto: ' + question.correct;
+        feedbackDiv.style.background = 'var(--success-bg)';
+        feedbackDiv.style.color = 'var(--success-color)';
+        feedbackDiv.style.border = '2px solid var(--success-color)';
     } else {
-        showModal('Incorrecto. La respuesta correcta es: ' + question.correct); // Mostrar mensaje de incorrecto con la respuesta correcta
-        input.style.backgroundColor = '#F44336'; // Cambiar el color de fondo a rojo
-        input.style.color = '#fff';
+        input.style.borderColor = 'var(--error-color)';
+        input.style.background = 'var(--error-bg)';
+        feedbackDiv.textContent = '✗ Incorrecto. Respuesta correcta: ' + question.correct;
+        feedbackDiv.style.background = 'var(--error-bg)';
+        feedbackDiv.style.color = 'var(--error-color)';
+        feedbackDiv.style.border = '2px solid var(--error-color)';
     }
 
-    input.disabled = true; // Deshabilitar el campo de entrada
-    summary[currentQuestionIndex].answered = true; // Marcar la pregunta como respondida en el resumen
-    updateSummaryPanel(); // Actualizar el panel de resumen
+    input.disabled = true;
+    input.parentElement.appendChild(feedbackDiv);
+    summary[currentQuestionIndex].answered = true;
+    updateSummaryPanel();
     
-    // Mostrar feedback visual por un momento
     setTimeout(() => {
-        // No avanzar automáticamente, el usuario decidirá con los botones de navegación
-    }, 1500); // Reducido a 1.5 segundos solo para mostrar el feedback
+        document.getElementById('next-button').disabled = false;
+    }, 400);
 }
 
-// Función para actualizar el panel de resumen
-function updateSummaryPanel() {
-    const summaryCountElement = document.getElementById('summary-count'); // Obtener el elemento de conteo del resumen
-    const summaryListElement = document.getElementById('summary-list'); // Obtener el elemento de lista del resumen
-
-    const totalQuestions = shuffledQuestions.length; // Obtener el número total de preguntas
-    const answeredQuestions = summary.filter(item => item.answered).length; // Contar preguntas respondidas
-    const correctQuestions = summary.filter(item => item.correct).length; // Contar preguntas correctas
-    const partiallyCorrectQuestions = summary.filter(item => item.partiallyCorrect).length; // Contar preguntas parcialmente correctas
-
-    summaryCountElement.textContent = `${answeredQuestions}/${totalQuestions} preguntas respondidas. ${correctQuestions} correctas, ${partiallyCorrectQuestions} parcialmente correctas.`; // Mostrar conteo
-
-    summaryListElement.innerHTML = ''; // Limpiar lista anterior
-    summary.forEach((item, index) => {
-        const listItem = document.createElement('li'); // Crear elemento de lista
-        listItem.textContent = `Pregunta ${index + 1}`;
-        if (item.answered) {
-            if (item.correct) {
-                listItem.classList.add('correct'); // Agregar clase correct
-            } else if (item.partiallyCorrect) {
-                listItem.classList.add('partially-correct'); // Agregar clase partially-correct
-            } else {
-                listItem.classList.add('incorrect'); // Agregar clase incorrect
-            }
-        }
-        if (index === currentQuestionIndex) {
-            listItem.classList.add('current'); // Agregar clase current
-        }
-        listItem.onclick = () => {
-            currentQuestionIndex = index; // Cambiar a la pregunta seleccionada
-            showQuestion(); // Mostrar la pregunta
-        };
-        summaryListElement.appendChild(listItem); // Agregar elemento a la lista
-    });
-}
-
-// Función para mostrar el modal
-function showModal(message) {
-    const modal = document.getElementById('modal'); // Obtener el modal
-    const modalMessage = document.getElementById('modal-message'); // Obtener el mensaje del modal
-    modalMessage.textContent = message; // Establecer el mensaje
-    modal.style.display = "block"; // Mostrar el modal
-}
-
-// Función para cerrar el modal
-function closeModal() {
-    const modal = document.getElementById('modal'); // Obtener el modal
-    modal.style.display = "none"; // Ocultar el modal
+// Función para enviar respuesta actual
+function submitCurrentAnswer() {
+    const question = shuffledQuestions[currentQuestionIndex];
+    
+    if (!question) {
+        const submitBtn = document.getElementById('submit-button');
+        submitBtn.style.animation = 'shake 0.2s';
+        setTimeout(() => submitBtn.style.animation = '', 200);
+        return;
+    }
+    
+    const questionType = question.type || 'opcion';
+    const normalizedType = questionType === 'escribir' ? 'written' : 
+                          questionType === 'varias' ? 'multiple' : 
+                          questionType === 'opcion' ? 'single' : questionType;
+    
+    if (selectedAnswers.length === 0 && normalizedType !== "written") {
+        const submitBtn = document.getElementById('submit-button');
+        submitBtn.style.animation = 'shake 0.2s';
+        setTimeout(() => submitBtn.style.animation = '', 200);
+        return;
+    }
+    
+    if (normalizedType === "written") {
+        checkWrittenAnswer();
+    } else if (Array.isArray(question.correct)) {
+        checkMultipleChoiceAnswer();
+    } else {
+        checkSingleChoiceAnswer();
+    }
 }
 
 // Funciones de navegación
@@ -473,38 +401,6 @@ function goToNextQuestion() {
     if (currentQuestionIndex < shuffledQuestions.length - 1) {
         currentQuestionIndex++;
         showQuestion();
-    } else {
-        showModal('¡Has completado el examen!');
-        currentQuestionIndex = 0;
-        showQuestion();
-    }
-}
-
-function submitCurrentAnswer() {
-    const question = shuffledQuestions[currentQuestionIndex];
-    
-    if (!question) {
-        showModal('Error: Pregunta no encontrada.');
-        return;
-    }
-    
-    // Normalizar tipos de pregunta
-    const questionType = question.type || 'opcion';
-    const normalizedType = questionType === 'escribir' ? 'written' : 
-                          questionType === 'varias' ? 'multiple' : 
-                          questionType === 'opcion' ? 'single' : questionType;
-    
-    if (selectedAnswers.length === 0 && normalizedType !== "written") {
-        showModal('Por favor, selecciona una respuesta antes de enviar.');
-        return;
-    }
-    
-    if (normalizedType === "written") {
-        checkWrittenAnswer();
-    } else if (Array.isArray(question.correct)) {
-        checkMultipleChoiceAnswer();
-    } else {
-        checkSingleChoiceAnswer();
     }
 }
 
@@ -512,89 +408,139 @@ function updateNavigationButtons() {
     const prevButton = document.getElementById('prev-button');
     const nextButton = document.getElementById('next-button');
     
-    // Deshabilitar botón anterior si estamos en la primera pregunta
     prevButton.disabled = (currentQuestionIndex === 0);
-    
-    // Deshabilitar botón siguiente si estamos en la última pregunta
     nextButton.disabled = (currentQuestionIndex === shuffledQuestions.length - 1);
 }
 
-// Event listeners for navigation buttons
-document.getElementById('prev-button').onclick = goToPreviousQuestion;
-document.getElementById('submit-button').onclick = submitCurrentAnswer;
-document.getElementById('next-button').onclick = goToNextQuestion;
+// Función para actualizar el panel de resumen
+function updateSummaryPanel() {
+    const summaryCountElement = document.getElementById('summary-count');
+    const summaryListElement = document.getElementById('summary-list');
 
-document.getElementById('restart-button').onclick = initializeQuiz; // Establecer el controlador de clic para reiniciar el cuestionario
+    const totalQuestions = shuffledQuestions.length;
+    const answeredQuestions = summary.filter(item => item.answered).length;
+    const correctQuestions = summary.filter(item => item.correct).length;
+    const partiallyCorrectQuestions = summary.filter(item => item.partiallyCorrect).length;
 
-document.getElementById('light-mode').onclick = () => {
-    document.body.classList.remove('dark-mode'); // Cambiar a modo claro
-};
+    summaryCountElement.textContent = `${answeredQuestions}/${totalQuestions} respondidas. ${correctQuestions} correctas, ${partiallyCorrectQuestions} parciales.`;
 
-document.getElementById('dark-mode').onclick = () => {
-    document.body.classList.add('dark-mode'); // Cambiar a modo oscuro
-};
-
-document.getElementById('modal-close').onclick = closeModal; // Establecer el controlador de clic para cerrar el modal
-
-document.getElementById('load-questions').onclick = () => {
-    const selectedSet = document.getElementById('question-set').value;
-    loadQuestionSet(selectedSet);
-};
-
-// Función para poblar el selector de conjuntos de preguntas
-async function populateQuestionSetSelector() {
-    const questionSetSelect = document.getElementById('question-set');
-    
-    // Limpiar opciones existentes
-    questionSetSelect.innerHTML = '';
-    
-    // Detectar archivos de preguntas disponibles
-    questionSets = await detectQuestionFiles();
-    
-    // Crear opciones para cada conjunto detectado
-    Object.entries(questionSets).forEach(([fileName, setInfo]) => {
-        const option = document.createElement('option');
-        option.value = fileName;
-        option.textContent = setInfo.name;
-        questionSetSelect.appendChild(option);
+    summaryListElement.innerHTML = '';
+    summary.forEach((item, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `Pregunta ${index + 1}`;
+        if (item.answered) {
+            if (item.correct) {
+                listItem.classList.add('correct');
+            } else if (item.partiallyCorrect) {
+                listItem.classList.add('partially-correct');
+            } else {
+                listItem.classList.add('incorrect');
+            }
+        } else {
+            listItem.classList.add('unanswered');
+        }
+        if (index === currentQuestionIndex) {
+            listItem.classList.add('current');
+        }
+        listItem.onclick = () => {
+            currentQuestionIndex = index;
+            showQuestion();
+        };
+        summaryListElement.appendChild(listItem);
     });
+}
+
+// Inicializar tema oscuro/claro
+function initializeTheme() {
+    const darkModeBtn = document.getElementById('dark-mode');
+    const lightModeBtn = document.getElementById('light-mode');
     
-    // Seleccionar el primer conjunto por defecto y cargarlo
-    if (questionSetSelect.options.length > 0) {
-        questionSetSelect.selectedIndex = 0;
-        const firstSet = questionSetSelect.options[0].value;
-        await loadQuestionSet(firstSet);
+    const savedTheme = localStorage.getItem('theme') || 
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', () => {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        });
+    }
+    
+    if (lightModeBtn) {
+        lightModeBtn.addEventListener('click', () => {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        });
     }
 }
 
-// Inicializar la aplicación cuando se carga la página
+// Inicialización - SOLO UNA VEZ
 document.addEventListener('DOMContentLoaded', async () => {
-    await populateQuestionSetSelector();
+    initializeTheme();
     
-    // Configurar el tutorial
-    setupTutorial();
-});
-
-// Función para configurar el tutorial
-function setupTutorial() {
     const tutorialBtn = document.getElementById('tutorial-btn');
-    const tutorialModal = document.getElementById('tutorial-modal');
-    const tutorialClose = document.getElementById('tutorial-close');
+    const modal = document.getElementById('modal');
+    const closeBtn = document.querySelector('.close');
     
-    // Abrir tutorial
-    tutorialBtn.addEventListener('click', function() {
-        tutorialModal.style.display = 'block';
-    });
+    if (modal) modal.style.display = 'none';
     
-    // Cerrar tutorial
-    tutorialClose.addEventListener('click', function() {
-        tutorialModal.style.display = 'none';
-    });
+    if (tutorialBtn && modal) {
+        tutorialBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+    }
     
-    // Cerrar tutorial al hacer clic fuera del modal
-    window.addEventListener('click', function(event) {
-        if (event.target === tutorialModal) {
-            tutorialModal.style.display = 'none';
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
+    
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
         }
     });
-}
+    
+    // Poblar selector SOLO UNA VEZ
+    await populateQuestionSetSelector();
+    
+    // Event listeners
+    const loadButton = document.getElementById('load-questions');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    const submitButton = document.getElementById('submit-button');
+    const restartButton = document.getElementById('restart-button');
+    
+    if (loadButton) {
+        loadButton.addEventListener('click', async () => {
+            const selector = document.getElementById('question-set');
+            const selectedFile = selector.value;
+            
+            if (!selectedFile) {
+                selector.style.animation = 'shake 0.2s';
+                selector.style.borderColor = 'var(--error-color)';
+                setTimeout(() => {
+                    selector.style.animation = '';
+                    selector.style.borderColor = '';
+                }, 200);
+                return;
+            }
+            
+            await loadQuestionSet(selectedFile);
+        });
+    }
+    
+    if (prevButton) prevButton.addEventListener('click', goToPreviousQuestion);
+    if (nextButton) nextButton.addEventListener('click', goToNextQuestion);
+    if (submitButton) submitButton.addEventListener('click', submitCurrentAnswer);
+    if (restartButton) restartButton.addEventListener('click', restartQuiz);
+    
+    // Navegación con teclado
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') goToPreviousQuestion();
+        if (event.key === 'ArrowRight') goToNextQuestion();
+        if (event.key === 'Enter') submitCurrentAnswer();
+    });
+});
