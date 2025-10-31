@@ -67,7 +67,7 @@
 ### 📥 Paso 1: Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/page-test_maker.git
+git clone https://github.com/MatiasGdo/page-test_maker.git
 cd page-test_maker
 ```
 
