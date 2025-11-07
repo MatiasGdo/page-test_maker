@@ -449,6 +449,16 @@ MIT License - Copyright (c) 2025
 
 ---
 
+## 📧 TO-DO
+
+<div align="center">
+
+* Posibilidad de añadir imágenes dentro de las preguntas
+
+</div>
+
+---
+
 ## 📧 Contacto y Soporte
 
 <div align="center">
