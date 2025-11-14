@@ -6,6 +6,17 @@ let summary = [];
 let selectedAnswers = [];
 let questions = [];
 
+// Utilidad: escribir texto multilínea de forma segura (preserva \n)
+function setMultilineText(el, text) {
+    if (!el) return;
+    el.innerHTML = '';
+    const parts = String(text).split('\n');
+    parts.forEach((part, idx) => {
+        if (idx > 0) el.appendChild(document.createElement('br'));
+        el.appendChild(document.createTextNode(part));
+    });
+}
+
 // Función para mezclar un array (algoritmo Fisher-Yates)
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -177,7 +188,8 @@ function showQuestion() {
     }
 
     questionNumberElement.textContent = `Pregunta ${currentQuestionIndex + 1}`;
-    questionElement.textContent = question.question;
+    // Soporte robusto de saltos de línea en enunciado
+    setMultilineText(questionElement, question.question);
     answersElement.innerHTML = '';
     selectedAnswers = [];
 
@@ -215,7 +227,8 @@ function showQuestion() {
 
         shuffledAnswers.forEach(({ answer, index }) => {
             const button = document.createElement('button');
-            button.textContent = answer.slice(3);
+            // Render respuestas multilínea de forma segura
+            setMultilineText(button, answer.slice(3));
             button.onclick = () => toggleAnswer(index);
             button.dataset.index = index;
             button.classList.add('answer-btn');
