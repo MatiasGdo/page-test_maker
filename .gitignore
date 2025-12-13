@@ -1,5 +1,5 @@
 # Archivos de baterías de preguntas (contenido personalizado del usuario)
-questions/*
+# questions/*
 
 # Mantener la estructura del directorio pero ignorar el contenido
 !questions/.gitkeep
