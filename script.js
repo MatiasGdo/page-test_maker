@@ -228,7 +228,7 @@ function showQuestion() {
         shuffledAnswers.forEach(({ answer, index }) => {
             const button = document.createElement('button');
             // Render respuestas multilínea de forma segura
-            setMultilineText(button, answer.slice(3));
+            setMultilineText(button, answer);
             button.onclick = () => toggleAnswer(index);
             button.dataset.index = index;
             button.classList.add('answer-btn');
